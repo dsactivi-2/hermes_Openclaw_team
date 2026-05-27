@@ -1,0 +1,21 @@
+2026-05-27T00:58:36Z RUN  ssh k3-1 -- kubectl get pods -A -o wide
+2026-05-27T00:58:36Z FAIL ssh/kubectl cmd '01_get_pods_all_wide' rc=255 (see 01_get_pods_all_wide.stderr.txt)
+2026-05-27T00:58:36Z RUN  ssh k3-1 -- kubectl get deploy,sts,ds,job,cronjob,pvc,ingress,svc -A
+2026-05-27T00:58:36Z FAIL ssh/kubectl cmd '02_get_workloads_core' rc=255 (see 02_get_workloads_core.stderr.txt)
+2026-05-27T00:58:36Z RUN  ssh k3-1 -- kubectl get ns
+2026-05-27T00:58:36Z FAIL ssh/kubectl cmd '03_get_namespaces' rc=255 (see 03_get_namespaces.stderr.txt)
+2026-05-27T00:58:36Z RUN  ssh k3-1 -- kubectl get nodes -o wide
+2026-05-27T00:58:36Z FAIL ssh/kubectl cmd '04_get_nodes' rc=255 (see 04_get_nodes.stderr.txt)
+2026-05-27T00:58:36Z RUN  ssh k3-1 -- kubectl get events -A --sort-by=.lastTimestamp | tail -n 200
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '05_get_events_recent' rc=255 (see 05_get_events_recent.stderr.txt)
+2026-05-27T00:58:37Z RUN  ssh k3-1 -- kubectl get rs -A
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '06_get_rs_all' rc=255 (see 06_get_rs_all.stderr.txt)
+2026-05-27T00:58:37Z RUN  ssh k3-1 -- kubectl get endpoints -A
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '07_get_endpoints_all' rc=255 (see 07_get_endpoints_all.stderr.txt)
+2026-05-27T00:58:37Z RUN  ssh k3-1 -- kubectl get ingressclass
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '08_get_ingressclasses' rc=255 (see 08_get_ingressclasses.stderr.txt)
+2026-05-27T00:58:37Z RUN  ssh k3-1 -- kubectl get pv
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '09_get_pv' rc=255 (see 09_get_pv.stderr.txt)
+2026-05-27T00:58:37Z RUN  ssh k3-1 -- kubectl get storageclass
+2026-05-27T00:58:37Z FAIL ssh/kubectl cmd '10_get_storageclasses' rc=255 (see 10_get_storageclasses.stderr.txt)
+2026-05-27T00:58:37Z DONE report=/Users/activi/Documents/activi K3s/reports/k3s-cleanup-inventory_2026-05-27_02-58-36/report.txt

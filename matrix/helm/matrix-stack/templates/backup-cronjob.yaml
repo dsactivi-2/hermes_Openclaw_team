@@ -1,0 +1,62 @@
+{{- if .Values.backup.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-backups
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: {{ .Values.backup.storage.storageClassName | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.storage.size | quote }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-postgres-backup
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backup
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "matrix-stack.labels" . | nindent 12 }}
+            app.kubernetes.io/component: backup
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: pg-dump
+              image: {{ .Values.backup.image | quote }}
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "matrix-stack.secretName" . }}
+                      key: db-password
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  stamp="$(date -u +%Y%m%d-%H%M%S)"
+                  pg_dump -h {{ include "matrix-stack.fullname" . }}-postgres -U {{ .Values.postgres.username }} -d {{ .Values.postgres.database }} > "/backups/synapse-${stamp}.sql"
+                  find /backups -name 'synapse-*.sql' -type f -mtime +14 -delete
+              volumeMounts:
+                - name: backups
+                  mountPath: /backups
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: {{ include "matrix-stack.fullname" . }}-backups
+{{- end }}

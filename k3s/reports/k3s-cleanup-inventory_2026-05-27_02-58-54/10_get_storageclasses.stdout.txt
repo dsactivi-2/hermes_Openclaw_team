@@ -1,0 +1,4 @@
+NAME                 PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+local-path           rancher.io/local-path   Delete          WaitForFirstConsumer   false                  8d
+longhorn (default)   driver.longhorn.io      Delete          Immediate              true                   6d
+longhorn-static      driver.longhorn.io      Delete          Immediate              true                   6d

@@ -1,0 +1,178 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: element
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: element
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: element
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: element
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-stack.labels" . | nindent 8 }}
+        app.kubernetes.io/component: element
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: element
+          image: {{ .Values.element.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: element-config
+              mountPath: /app/config.json
+              subPath: config.json
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /config.json
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /config.json
+              port: http
+            periodSeconds: 30
+          resources:
+            {{- toYaml .Values.element.resources | nindent 12 }}
+      volumes:
+        - name: element-config
+          configMap:
+            name: {{ include "matrix-stack.fullname" . }}-element-config
+---
+{{- if .Values.elementAdmin.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element-admin
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: element-admin
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: element-admin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element-admin
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: element-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: element-admin
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-stack.labels" . | nindent 8 }}
+        app.kubernetes.io/component: element-admin
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: element-admin
+          image: {{ .Values.elementAdmin.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: SERVER_NAME
+              value: {{ .Values.domains.matrix | quote }}
+          resources:
+            {{- toYaml .Values.elementAdmin.resources | nindent 12 }}
+{{- end }}
+---
+{{- if .Values.ketesa.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-ketesa
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ketesa
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: ketesa
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-ketesa
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ketesa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: ketesa
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-stack.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ketesa
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: ketesa
+          image: {{ .Values.ketesa.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: ketesa-config
+              mountPath: /var/public/config.json
+              subPath: config.json
+              readOnly: true
+          resources:
+            {{- toYaml .Values.ketesa.resources | nindent 12 }}
+      volumes:
+        - name: ketesa-config
+          configMap:
+            name: {{ include "matrix-stack.fullname" . }}-ketesa-config
+{{- end }}

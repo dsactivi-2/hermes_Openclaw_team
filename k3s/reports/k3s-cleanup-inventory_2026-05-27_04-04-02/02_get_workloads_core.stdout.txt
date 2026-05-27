@@ -1,0 +1,193 @@
+NAMESPACE         NAME                                                       READY   UP-TO-DATE   AVAILABLE   AGE
+cert-manager      deployment.apps/cert-manager                               1/1     1            1           5d9h
+cert-manager      deployment.apps/cert-manager-cainjector                    1/1     1            1           5d9h
+cert-manager      deployment.apps/cert-manager-webhook                       1/1     1            1           5d9h
+cnpg-system       deployment.apps/barman-cloud                               1/1     1            1           2d23h
+cnpg-system       deployment.apps/cloudnative-pg                             1/1     1            1           2d23h
+healthchecks      deployment.apps/healthchecks                               1/1     1            1           32h
+hindsight         deployment.apps/hindsight-api                              1/1     1            1           24h
+hindsight         deployment.apps/hindsight-ollama                           1/1     1            1           24h
+hindsight         deployment.apps/hindsight-ui                               1/1     1            1           24h
+hindsight         deployment.apps/hindsight-worker                           1/1     1            1           24h
+kube-system       deployment.apps/coredns                                    1/1     1            1           8d
+kube-system       deployment.apps/local-path-provisioner                     1/1     1            1           8d
+kube-system       deployment.apps/metrics-server                             1/1     1            1           8d
+longhorn-system   deployment.apps/csi-attacher                               3/3     3            3           6d1h
+longhorn-system   deployment.apps/csi-provisioner                            3/3     3            3           6d1h
+longhorn-system   deployment.apps/csi-resizer                                3/3     3            3           6d1h
+longhorn-system   deployment.apps/csi-snapshotter                            3/3     3            3           6d1h
+longhorn-system   deployment.apps/longhorn-driver-deployer                   1/1     1            1           6d1h
+longhorn-system   deployment.apps/longhorn-ui                                2/2     2            2           6d1h
+matrix            deployment.apps/matrix-matrix-stack-element                1/1     1            1           4h9m
+matrix            deployment.apps/matrix-matrix-stack-ketesa                 1/1     1            1           4h9m
+moneymaker        deployment.apps/dograh-api                                 1/1     1            1           3h40m
+moneymaker        deployment.apps/dograh-redis                               1/1     1            1           3h40m
+moneymaker        deployment.apps/dograh-ui                                  1/1     1            1           3h40m
+monitoring        deployment.apps/blackbox-exporter                          1/1     1            1           27h
+monitoring        deployment.apps/kube-prometheus-stack-grafana              1/1     1            1           2d15h
+monitoring        deployment.apps/kube-prometheus-stack-kube-state-metrics   1/1     1            1           2d15h
+monitoring        deployment.apps/kube-prometheus-stack-operator             1/1     1            1           2d15h
+n8n               deployment.apps/n8n                                        1/1     1            1           9h
+n8n               deployment.apps/n8n-main                                   0/0     0            0           6h6m
+n8n               deployment.apps/n8n-worker                                 0/0     0            0           6h6m
+portainer         deployment.apps/portainer                                  1/1     1            1           8d
+velero            deployment.apps/velero                                     1/1     1            1           3d
+
+NAMESPACE    NAME                                                               READY   AGE
+matrix       statefulset.apps/matrix-matrix-stack-postgres                      1/1     4h9m
+matrix       statefulset.apps/matrix-matrix-stack-synapse                       1/1     4h9m
+moneymaker   statefulset.apps/dograh-minio                                      1/1     3h40m
+monitoring   statefulset.apps/alertmanager-kube-prometheus-stack-alertmanager   1/1     2d15h
+monitoring   statefulset.apps/prometheus-kube-prometheus-stack-prometheus       1/1     2d15h
+n8n          statefulset.apps/n8n-redis                                         0/0     6h8m
+
+NAMESPACE         NAME                                                            DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+ingress-nginx     daemonset.apps/ingress-nginx-controller                         3         3         3       3            3           kubernetes.io/os=linux   5d9h
+longhorn-system   daemonset.apps/engine-image-ei-c9fa6d45                         3         3         3       3            3           <none>                   6d1h
+longhorn-system   daemonset.apps/longhorn-csi-plugin                              3         3         3       3            3           <none>                   6d1h
+longhorn-system   daemonset.apps/longhorn-manager                                 3         3         3       3            3           <none>                   6d1h
+monitoring        daemonset.apps/kube-prometheus-stack-prometheus-node-exporter   3         3         3       3            3           kubernetes.io/os=linux   2d15h
+
+NAMESPACE             NAME                                                        STATUS     COMPLETIONS   DURATION   AGE
+cnpg-smoke-20260524   job.batch/cnpg-smoke-pgdump-retry-20260524                  Complete   1/1           3s         2d22h
+healthchecks          job.batch/healthchecks-sqlite-backup-29662647               Complete   1/1           3s         24h
+healthchecks          job.batch/healthchecks-sqlite-backup-29664087               Complete   1/1           3s         37m
+healthchecks          job.batch/healthchecks-sqlite-backup-manual-20260525-2224   Complete   1/1           3s         29h
+healthchecks          job.batch/healthchecks-sqlite-restore-test                  Complete   1/1           3s         29h
+hindsight             job.batch/hindsight-groq-healthcheck-29664090               Complete   1/1           4s         34m
+hindsight             job.batch/hindsight-groq-healthcheck-29664105               Complete   1/1           4s         19m
+hindsight             job.batch/hindsight-groq-healthcheck-29664120               Complete   1/1           4s         4m4s
+hindsight             job.batch/hindsight-ollama-pull-bge-m3                      Complete   1/1           27s        24h
+hindsight             job.batch/hindsight-postgres-pgdump-29662661                Complete   1/1           10s        24h
+hindsight             job.batch/hindsight-postgres-pgdump-29664101                Complete   1/1           10s        23m
+hindsight             job.batch/hindsight-postgres-pgdump-manual-verify           Complete   1/1           29s        24h
+hindsight             job.batch/hindsight-postgres-pgdump-restore-test            Complete   1/1           17s        24h
+longhorn-system       job.batch/healthchecks-backup-daily-29663987                Complete   1/1           13s        137m
+longhorn-system       job.batch/healthchecks-snapshot-hourly-29664077             Complete   1/1           8s         47m
+longhorn-system       job.batch/hindsight-backup-daily-29663997                   Complete   1/1           3s         127m
+longhorn-system       job.batch/hindsight-snapshot-hourly-29664087                Complete   1/1           2s         37m
+longhorn-system       job.batch/lh-system-backup-daily-29664017                   Complete   1/1           18s        107m
+longhorn-system       job.batch/n8n-backup-daily-29663987                         Complete   1/1           3s         137m
+longhorn-system       job.batch/n8n-snapshot-hourly-29664077                      Complete   1/1           3s         47m
+longhorn-system       job.batch/prod-backup-daily-29663977                        Complete   1/1           13s        147m
+longhorn-system       job.batch/prod-backup-weekly-29659752                       Complete   1/1           13s        3d
+longhorn-system       job.batch/prod-snapshot-hourly-29664067                     Complete   1/1           8s         57m
+matrix                job.batch/matrix-matrix-stack-postgres-backup-29664077      Complete   1/1           19s        47m
+n8n                   job.batch/n8n-redis-cluster-init                            Complete   1/1           85s        6h8m
+
+NAMESPACE         NAME                                                SCHEDULE       TIMEZONE   SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+healthchecks      cronjob.batch/healthchecks-sqlite-backup            27 3 * * *     <none>     False     0        37m             30h
+hindsight         cronjob.batch/hindsight-groq-healthcheck            */15 * * * *   <none>     False     0        4m4s            24h
+hindsight         cronjob.batch/hindsight-postgres-pgdump             41 3 * * *     <none>     False     0        23m             24h
+longhorn-system   cronjob.batch/healthchecks-backup-daily             47 1 * * *     <none>     False     0        137m            28h
+longhorn-system   cronjob.batch/healthchecks-backup-weekly            22 3 * * 0     <none>     False     0        <none>          28h
+longhorn-system   cronjob.batch/healthchecks-snapshot-hourly          17 * * * *     <none>     False     0        47m             28h
+longhorn-system   cronjob.batch/hindsight-backup-daily                57 1 * * *     <none>     False     0        127m            24h
+longhorn-system   cronjob.batch/hindsight-backup-weekly               32 3 * * 0     <none>     False     0        <none>          24h
+longhorn-system   cronjob.batch/hindsight-snapshot-hourly             27 * * * *     <none>     False     0        37m             24h
+longhorn-system   cronjob.batch/lh-system-backup-daily                17 2 * * *     <none>     False     0        107m            5d19h
+longhorn-system   cronjob.batch/n8n-backup-daily                      47 1 * * *     <none>     False     0        137m            9h
+longhorn-system   cronjob.batch/n8n-backup-weekly                     22 3 * * 0     <none>     False     0        <none>          9h
+longhorn-system   cronjob.batch/n8n-snapshot-hourly                   17 * * * *     <none>     False     0        47m             9h
+longhorn-system   cronjob.batch/prod-backup-daily                     37 1 * * *     <none>     False     0        147m            3d1h
+longhorn-system   cronjob.batch/prod-backup-weekly                    12 3 * * 0     <none>     False     0        3d              3d1h
+longhorn-system   cronjob.batch/prod-snapshot-hourly                  7 * * * *      <none>     False     0        57m             3d1h
+matrix            cronjob.batch/matrix-matrix-stack-postgres-backup   17 3 * * *     <none>     False     0        47m             4h9m
+
+NAMESPACE                     NAME                                                                                                                         STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+cnpg-smoke-20260524           persistentvolumeclaim/cnpg-smoke-1                                                                                           Bound    pvc-d568ccd6-048d-428c-b0d7-b21000828cc7   1Gi        RWO            longhorn       <unset>                 2d23h
+cnpg-smoke-restore-20260524   persistentvolumeclaim/cnpg-smoke-restore-1                                                                                   Bound    pvc-2d99062e-1ed8-4001-8736-c6c5df221bf4   1Gi        RWO            longhorn       <unset>                 2d22h
+healthchecks                  persistentvolumeclaim/healthchecks-data                                                                                      Bound    pvc-f3646e24-e2c8-44f4-8e2d-0241bfca5f71   1Gi        RWO            longhorn       <unset>                 33h
+hindsight                     persistentvolumeclaim/hindsight-ollama-data                                                                                  Bound    pvc-64092c27-dfef-41b1-840c-2fed8627a34c   20Gi       RWO            longhorn       <unset>                 24h
+hindsight                     persistentvolumeclaim/hindsight-postgres-1                                                                                   Bound    pvc-1d262a14-88b5-47b2-9a8c-a0e4c4e96c4d   10Gi       RWO            longhorn       <unset>                 24h
+hindsight                     persistentvolumeclaim/hindsight-postgres-2                                                                                   Bound    pvc-bdad033d-df80-4dda-9239-a50f754ba9cd   10Gi       RWO            longhorn       <unset>                 24h
+hindsight                     persistentvolumeclaim/hindsight-postgres-3                                                                                   Bound    pvc-161bb034-2fa5-42d4-a7e3-5835701e1af6   10Gi       RWO            longhorn       <unset>                 24h
+longhorn-test                 persistentvolumeclaim/longhorn-test-pvc                                                                                      Bound    pvc-997ae793-92a8-470a-a14d-f5a8a5e42179   1Gi        RWO            longhorn       <unset>                 6d
+longhorn-test                 persistentvolumeclaim/longhorn-test-restore-pvc                                                                              Bound    lh-test-restore-20260521-0324-pv           1Gi        RWO            longhorn       <unset>                 6d
+matrix                        persistentvolumeclaim/matrix-matrix-stack-backups                                                                            Bound    pvc-b394b979-0996-4f72-adc1-a4aa4be71caf   50Gi       RWO            longhorn       <unset>                 4h9m
+matrix                        persistentvolumeclaim/postgres-data-matrix-matrix-stack-postgres-0                                                           Bound    pvc-6d2c420f-a919-4f45-82bc-459c19626d4f   30Gi       RWO            longhorn       <unset>                 4h9m
+matrix                        persistentvolumeclaim/synapse-media-matrix-matrix-stack-synapse-0                                                            Bound    pvc-22eca6f9-6786-494f-9b4d-4abbf448e71e   100Gi      RWO            longhorn       <unset>                 4h9m
+moneymaker                    persistentvolumeclaim/data-dograh-minio-0                                                                                    Bound    pvc-93096cfe-b215-4c83-bf70-8710edb6f0d8   20Gi       RWO            longhorn       <unset>                 3h40m
+moneymaker                    persistentvolumeclaim/dograh-postgres-1                                                                                      Bound    pvc-c57fae40-e7b1-491a-a7c5-ecf654729d4b   20Gi       RWO            longhorn       <unset>                 3h40m
+moneymaker                    persistentvolumeclaim/dograh-postgres-2                                                                                      Bound    pvc-882137a3-3f3b-42af-99df-aa7161f7880b   20Gi       RWO            longhorn       <unset>                 3h39m
+moneymaker                    persistentvolumeclaim/dograh-postgres-3                                                                                      Bound    pvc-49137502-a82a-469c-ab99-b0e5266091b2   20Gi       RWO            longhorn       <unset>                 3h39m
+monitoring                    persistentvolumeclaim/alertmanager-kube-prometheus-stack-alertmanager-db-alertmanager-kube-prometheus-stack-alertmanager-0   Bound    pvc-943e039f-71cd-4036-9364-b3308f37ac21   2Gi        RWO            longhorn       <unset>                 2d15h
+monitoring                    persistentvolumeclaim/kube-prometheus-stack-grafana                                                                          Bound    pvc-a710f65b-bdcc-4e43-aaee-ee30e2f80abd   5Gi        RWO            longhorn       <unset>                 2d15h
+monitoring                    persistentvolumeclaim/prometheus-kube-prometheus-stack-prometheus-db-prometheus-kube-prometheus-stack-prometheus-0           Bound    pvc-95286401-4ed8-40c0-86db-732377dbc00c   10Gi       RWO            longhorn       <unset>                 2d15h
+n8n                           persistentvolumeclaim/data-n8n-redis-0                                                                                       Bound    pvc-00893d39-1589-4a24-a9f4-0b4015d4f65c   2Gi        RWO            longhorn       <unset>                 6h8m
+n8n                           persistentvolumeclaim/data-n8n-redis-1                                                                                       Bound    pvc-66112ebe-3b56-4580-b549-a4450f0ee0c2   2Gi        RWO            longhorn       <unset>                 6h7m
+n8n                           persistentvolumeclaim/data-n8n-redis-2                                                                                       Bound    pvc-d3438026-1576-4a9a-a510-fc287dab7e9e   2Gi        RWO            longhorn       <unset>                 6h7m
+n8n                           persistentvolumeclaim/n8n-data                                                                                               Bound    pvc-14c8285f-d4ac-4817-aacb-2744fcd710bc   20Gi       RWO            longhorn       <unset>                 9h
+n8n                           persistentvolumeclaim/n8n-postgres-1                                                                                         Bound    pvc-7c24900d-482f-45de-9471-18a100280f66   20Gi       RWO            longhorn       <unset>                 9h
+n8n                           persistentvolumeclaim/n8n-postgres-2                                                                                         Bound    pvc-b5adf9c3-2ebe-468d-a4a5-cc48b309ad20   20Gi       RWO            longhorn       <unset>                 9h
+n8n                           persistentvolumeclaim/n8n-postgres-3                                                                                         Bound    pvc-f013d628-115c-4152-8ffa-a1e9a4f44568   20Gi       RWO            longhorn       <unset>                 9h
+portainer                     persistentvolumeclaim/portainer                                                                                              Bound    pvc-26770df2-75e4-4b26-b2d7-36ddd1c69e12   10Gi       RWO            local-path     <unset>                 8d
+portainer                     persistentvolumeclaim/portainer-longhorn                                                                                     Bound    pvc-55be5ed9-52ee-4d5b-90e2-1fd5b045c99b   10Gi       RWO            longhorn       <unset>                 5d
+
+NAMESPACE      NAME                                                    CLASS   HOSTS                          ADDRESS                         PORTS     AGE
+healthchecks   ingress.networking.k8s.io/healthchecks                  nginx   healthchecks.activi.io         10.0.1.10,10.0.1.20,10.0.1.30   80, 443   32h
+hindsight      ingress.networking.k8s.io/hindsight                     nginx   hindsight.activi.io            10.0.1.10,10.0.1.20,10.0.1.30   80, 443   80m
+matrix         ingress.networking.k8s.io/matrix-matrix-stack-element   nginx   space.activi-apps.io           10.0.1.10,10.0.1.20,10.0.1.30   80, 443   4h9m
+matrix         ingress.networking.k8s.io/matrix-matrix-stack-ketesa    nginx   synapse-admin.activi-apps.io   10.0.1.10,10.0.1.20,10.0.1.30   80, 443   4h9m
+matrix         ingress.networking.k8s.io/matrix-matrix-stack-matrix    nginx   matrix.activi-apps.io          10.0.1.10,10.0.1.20,10.0.1.30   80, 443   4h9m
+moneymaker     ingress.networking.k8s.io/dograh                        nginx   mm.activi-apps.io              10.0.1.10,10.0.1.20,10.0.1.30   80, 443   3h39m
+moneymaker     ingress.networking.k8s.io/dograh-minio-console          nginx   minio-mm.activi-apps.io        10.0.1.10,10.0.1.20,10.0.1.30   80, 443   68m
+n8n            ingress.networking.k8s.io/n8n                           nginx   n8n-mm.activi-apps.io          10.0.1.10,10.0.1.20,10.0.1.30   80, 443   9h
+portainer      ingress.networking.k8s.io/portainer                     nginx   portainer.activi.io            10.0.1.10,10.0.1.20,10.0.1.30   80, 443   5d5h
+
+NAMESPACE                     NAME                                                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                        AGE
+cert-manager                  service/cert-manager                                     ClusterIP   10.43.110.198   <none>        9402/TCP                       5d9h
+cert-manager                  service/cert-manager-cainjector                          ClusterIP   10.43.229.171   <none>        9402/TCP                       5d9h
+cert-manager                  service/cert-manager-webhook                             ClusterIP   10.43.23.32     <none>        443/TCP,9402/TCP               5d9h
+cnpg-smoke-20260524           service/cnpg-smoke-r                                     ClusterIP   10.43.154.209   <none>        5432/TCP                       2d23h
+cnpg-smoke-20260524           service/cnpg-smoke-ro                                    ClusterIP   10.43.35.31     <none>        5432/TCP                       2d23h
+cnpg-smoke-20260524           service/cnpg-smoke-rw                                    ClusterIP   10.43.130.124   <none>        5432/TCP                       2d23h
+cnpg-smoke-restore-20260524   service/cnpg-smoke-restore-r                             ClusterIP   10.43.114.169   <none>        5432/TCP                       2d22h
+cnpg-smoke-restore-20260524   service/cnpg-smoke-restore-ro                            ClusterIP   10.43.40.128    <none>        5432/TCP                       2d22h
+cnpg-smoke-restore-20260524   service/cnpg-smoke-restore-rw                            ClusterIP   10.43.223.51    <none>        5432/TCP                       2d22h
+cnpg-system                   service/barman-cloud                                     ClusterIP   10.43.252.66    <none>        9090/TCP                       2d23h
+cnpg-system                   service/cnpg-webhook-service                             ClusterIP   10.43.173.211   <none>        443/TCP                        2d23h
+default                       service/kubernetes                                       ClusterIP   10.43.0.1       <none>        443/TCP                        8d
+healthchecks                  service/healthchecks                                     ClusterIP   10.43.153.55    <none>        8000/TCP                       32h
+hindsight                     service/hindsight-api                                    ClusterIP   10.43.26.20     <none>        8888/TCP                       24h
+hindsight                     service/hindsight-ollama                                 ClusterIP   10.43.125.113   <none>        11434/TCP                      24h
+hindsight                     service/hindsight-postgres-r                             ClusterIP   10.43.18.129    <none>        5432/TCP                       24h
+hindsight                     service/hindsight-postgres-ro                            ClusterIP   10.43.94.255    <none>        5432/TCP                       24h
+hindsight                     service/hindsight-postgres-rw                            ClusterIP   10.43.130.55    <none>        5432/TCP                       24h
+hindsight                     service/hindsight-ui                                     ClusterIP   10.43.249.24    <none>        9999/TCP                       24h
+ingress-nginx                 service/ingress-nginx-controller-admission               ClusterIP   10.43.55.93     <none>        443/TCP                        5d9h
+kube-system                   service/kube-dns                                         ClusterIP   10.43.0.10      <none>        53/UDP,53/TCP,9153/TCP         8d
+kube-system                   service/kube-prometheus-stack-coredns                    ClusterIP   None            <none>        9153/TCP                       2d15h
+kube-system                   service/kube-prometheus-stack-kubelet                    ClusterIP   None            <none>        10250/TCP,4194/TCP,10255/TCP   2d15h
+kube-system                   service/metrics-server                                   ClusterIP   10.43.171.98    <none>        443/TCP                        8d
+longhorn-system               service/longhorn-admission-webhook                       ClusterIP   10.43.3.228     <none>        9502/TCP                       6d1h
+longhorn-system               service/longhorn-backend                                 ClusterIP   10.43.114.213   <none>        9500/TCP                       6d1h
+longhorn-system               service/longhorn-frontend                                ClusterIP   10.43.119.106   <none>        80/TCP                         6d1h
+longhorn-system               service/longhorn-recovery-backend                        ClusterIP   10.43.243.110   <none>        9503/TCP                       6d1h
+matrix                        service/matrix-matrix-stack-element                      ClusterIP   10.43.43.167    <none>        80/TCP                         4h9m
+matrix                        service/matrix-matrix-stack-ketesa                       ClusterIP   10.43.142.72    <none>        8080/TCP                       4h9m
+matrix                        service/matrix-matrix-stack-postgres                     ClusterIP   10.43.254.226   <none>        5432/TCP                       4h9m
+matrix                        service/matrix-matrix-stack-synapse                      ClusterIP   10.43.61.184    <none>        8008/TCP                       4h9m
+moneymaker                    service/dograh-api                                       ClusterIP   10.43.129.49    <none>        8000/TCP                       3h40m
+moneymaker                    service/dograh-minio                                     ClusterIP   10.43.37.250    <none>        9000/TCP,9001/TCP              3h40m
+moneymaker                    service/dograh-postgres-r                                ClusterIP   10.43.78.40     <none>        5432/TCP                       3h40m
+moneymaker                    service/dograh-postgres-ro                               ClusterIP   10.43.164.48    <none>        5432/TCP                       3h40m
+moneymaker                    service/dograh-postgres-rw                               ClusterIP   10.43.206.82    <none>        5432/TCP                       3h40m
+moneymaker                    service/dograh-redis                                     ClusterIP   10.43.22.127    <none>        6379/TCP                       3h40m
+moneymaker                    service/dograh-ui                                        ClusterIP   10.43.133.100   <none>        3010/TCP                       3h40m
+monitoring                    service/alertmanager-operated                            ClusterIP   None            <none>        9093/TCP,9094/TCP,9094/UDP     2d15h
+monitoring                    service/blackbox-exporter                                ClusterIP   10.43.139.0     <none>        9115/TCP                       27h
+monitoring                    service/kube-prometheus-stack-alertmanager               ClusterIP   10.43.223.74    <none>        9093/TCP,8080/TCP              2d15h
+monitoring                    service/kube-prometheus-stack-grafana                    ClusterIP   10.43.239.216   <none>        80/TCP                         2d15h
+monitoring                    service/kube-prometheus-stack-kube-state-metrics         ClusterIP   10.43.167.229   <none>        8080/TCP                       2d15h
+monitoring                    service/kube-prometheus-stack-operator                   ClusterIP   10.43.183.104   <none>        443/TCP                        2d15h
+monitoring                    service/kube-prometheus-stack-prometheus                 ClusterIP   10.43.138.132   <none>        9090/TCP,8080/TCP              2d15h
+monitoring                    service/kube-prometheus-stack-prometheus-node-exporter   ClusterIP   10.43.137.50    <none>        9100/TCP                       2d15h
+monitoring                    service/prometheus-operated                              ClusterIP   None            <none>        9090/TCP                       2d15h
+n8n                           service/n8n                                              ClusterIP   10.43.228.89    <none>        5678/TCP                       9h
+n8n                           service/n8n-postgres-r                                   ClusterIP   10.43.123.108   <none>        5432/TCP                       9h
+n8n                           service/n8n-postgres-ro                                  ClusterIP   10.43.247.221   <none>        5432/TCP                       9h
+n8n                           service/n8n-postgres-rw                                  ClusterIP   10.43.185.205   <none>        5432/TCP                       9h
+n8n                           service/n8n-redis-headless                               ClusterIP   None            <none>        6379/TCP,16379/TCP             6h8m
+portainer                     service/portainer                                        ClusterIP   10.43.191.43    <none>        9000/TCP,9443/TCP,8000/TCP     8d
+velero                        service/velero                                           ClusterIP   10.43.191.255   <none>        8085/TCP                       3d

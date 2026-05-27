@@ -1,0 +1,20 @@
+2026-05-27T02:04:02Z RUN  ssh k3-1 -- kubectl get pods -A -o wide
+2026-05-27T02:04:03Z OK   01_get_pods_all_wide
+2026-05-27T02:04:03Z RUN  ssh k3-1 -- kubectl get deploy,sts,ds,job,cronjob,pvc,ingress,svc -A
+2026-05-27T02:04:04Z OK   02_get_workloads_core
+2026-05-27T02:04:04Z RUN  ssh k3-1 -- kubectl get ns
+2026-05-27T02:04:04Z OK   03_get_namespaces
+2026-05-27T02:04:04Z RUN  ssh k3-1 -- kubectl get nodes -o wide
+2026-05-27T02:04:05Z OK   04_get_nodes
+2026-05-27T02:04:05Z RUN  ssh k3-1 -- kubectl get events -A --sort-by=.lastTimestamp | tail -n 200
+2026-05-27T02:04:06Z OK   05_get_events_recent
+2026-05-27T02:04:06Z RUN  ssh k3-1 -- kubectl get rs -A
+2026-05-27T02:04:06Z OK   06_get_rs_all
+2026-05-27T02:04:06Z RUN  ssh k3-1 -- kubectl get endpoints -A
+2026-05-27T02:04:07Z OK   07_get_endpoints_all
+2026-05-27T02:04:07Z RUN  ssh k3-1 -- kubectl get ingressclass
+2026-05-27T02:04:07Z OK   08_get_ingressclasses
+2026-05-27T02:04:07Z RUN  ssh k3-1 -- kubectl get pv
+2026-05-27T02:04:08Z OK   09_get_pv
+2026-05-27T02:04:08Z RUN  ssh k3-1 -- kubectl get storageclass
+2026-05-27T02:04:08Z OK   10_get_storageclasses

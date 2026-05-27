@@ -1,0 +1,382 @@
+{
+  "name": "Matrix Notifications - Policy Gated Draft",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Disabled/import-only draft. Sends only policy-approved errors, escalations, and summaries to Matrix. No credentials are embedded."
+  },
+  "tags": [
+    {
+      "name": "matrix"
+    },
+    {
+      "name": "draft"
+    },
+    {
+      "name": "policy-gated"
+    }
+  ],
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "severity",
+              "name": "severity",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "requires_human",
+              "name": "requires_human",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "escalation",
+              "name": "escalation",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "event_type",
+              "name": "event_type",
+              "value": "call_agent_error",
+              "type": "string"
+            },
+            {
+              "id": "summary",
+              "name": "summary",
+              "value": "DRAFT TEST: Call-agent error requiring human review.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-alert-test",
+      "name": "Draft Alert Test Event",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "report_type",
+              "name": "report_type",
+              "value": "daily_summary",
+              "type": "string"
+            },
+            {
+              "id": "summary",
+              "name": "summary",
+              "value": "DRAFT TEST: Daily n8n summary. No raw events included.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-daily-summary",
+      "name": "Draft Daily Summary Event",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "report_type",
+              "name": "report_type",
+              "value": "weekly_summary",
+              "type": "string"
+            },
+            {
+              "id": "summary",
+              "name": "summary",
+              "value": "DRAFT TEST: Weekly n8n summary. No raw events included.",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "set-weekly-summary",
+      "name": "Draft Weekly Summary Event",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -520,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const allowedSeverities = new Set(['critical', 'error', 'warning_requires_human']);\nconst allowedReportTypes = new Set(['daily_summary', 'weekly_summary']);\nconst allowedCallStatuses = new Set(['failed', 'escalated']);\nreturn items.flatMap((item) => {\n  const data = item.json || {};\n  const allowed = allowedSeverities.has(data.severity) || data.requires_human === true || data.escalation === true || allowedReportTypes.has(data.report_type) || allowedCallStatuses.has(data.call_agent_status);\n  if (!allowed) return [];\n  const target = (data.report_type === 'daily_summary' || data.report_type === 'weekly_summary') ? 'n8n' : 'alerts';\n  const summary = String(data.summary || data.message || 'Matrix notification').slice(0, 1200);\n  return [{ json: { ...data, matrix_target: target, matrix_body: summary } }];\n});"
+      },
+      "id": "policy-gate",
+      "name": "Policy Gate - Drop Event Spam",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        0
+      ],
+      "notes": "Only allows critical/error/warning_requires_human, requires_human=true, escalation=true, daily/weekly summaries, or failed/escalated call-agent statuses."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.matrix_target }}",
+                    "rightValue": "alerts",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "alerts"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.matrix_target }}",
+                    "rightValue": "n8n",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "n8n"
+            }
+          ]
+        }
+      },
+      "id": "route-by-policy",
+      "name": "Route by Approved Target",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        20,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://matrix.activi-apps.io/_matrix/client/v3/rooms/%21hvyOdcbGuWLFjXRmTs%3Amatrix.activi-apps.io/send/m.room.message/={{ $now.toMillis() }}-alerts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.MATRIX_BOT_ACCESS_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"msgtype\":\"m.text\",\"body\":\"[ALERT] \" + $json.matrix_body}"
+      },
+      "id": "send-alerts",
+      "name": "Send to Matrix #alerts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        -100
+      ],
+      "notes": "Draft only. Requires a Matrix bot credential/access token before manual execution."
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://matrix.activi-apps.io/_matrix/client/v3/rooms/%21qzMipDYvaqIlWRbHrP%3Amatrix.activi-apps.io/send/m.room.message/={{ $now.toMillis() }}-summary",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.MATRIX_BOT_ACCESS_TOKEN }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"msgtype\":\"m.text\",\"body\":\"[SUMMARY] \" + $json.matrix_body}"
+      },
+      "id": "send-n8n",
+      "name": "Send to Matrix #n8n",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        120
+      ],
+      "notes": "Draft only. Requires a Matrix bot credential/access token before manual execution."
+    },
+    {
+      "parameters": {
+        "content": "Policy: no success spam, no every-call posts, no workflow-start posts, no raw transcripts, no secrets. #ops and #dograh are intentionally excluded from this draft.",
+        "height": 180,
+        "width": 460
+      },
+      "id": "policy-note",
+      "name": "Policy Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        -420
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Draft Alert Test Event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Draft Daily Summary Event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Draft Weekly Summary Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Alert Test Event": {
+      "main": [
+        [
+          {
+            "node": "Policy Gate - Drop Event Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Daily Summary Event": {
+      "main": [
+        [
+          {
+            "node": "Policy Gate - Drop Event Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Weekly Summary Event": {
+      "main": [
+        [
+          {
+            "node": "Policy Gate - Drop Event Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Policy Gate - Drop Event Spam": {
+      "main": [
+        [
+          {
+            "node": "Route by Approved Target",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Approved Target": {
+      "main": [
+        [
+          {
+            "node": "Send to Matrix #alerts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to Matrix #n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "versionId": "draft-matrix-notifications-policy-gated",
+  "triggerCount": 0
+}

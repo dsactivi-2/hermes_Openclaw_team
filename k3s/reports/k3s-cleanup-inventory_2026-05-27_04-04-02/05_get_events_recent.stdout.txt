@@ -1,0 +1,121 @@
+NAMESPACE         LAST SEEN   TYPE      REASON                   OBJECT                                                        MESSAGE
+hindsight         34m         Normal    Scheduled                pod/hindsight-groq-healthcheck-29664090-hw7q4                 Successfully assigned hindsight/hindsight-groq-healthcheck-29664090-hw7q4 to activi-k3-1.0
+matrix            47m         Normal    Scheduled                pod/matrix-matrix-stack-postgres-backup-29664077-jpwc4        Successfully assigned matrix/matrix-matrix-stack-postgres-backup-29664077-jpwc4 to activi-k3-1.0
+hindsight         23m         Normal    Scheduled                pod/hindsight-postgres-pgdump-29664101-7sfg2                  Successfully assigned hindsight/hindsight-postgres-pgdump-29664101-7sfg2 to activi-k3-1.0
+hindsight         4m5s        Normal    Scheduled                pod/hindsight-groq-healthcheck-29664120-lrzdp                 Successfully assigned hindsight/hindsight-groq-healthcheck-29664120-lrzdp to activi-k3-1.0
+longhorn-system   47m         Normal    Scheduled                pod/healthchecks-snapshot-hourly-29664077-2zz8b               Successfully assigned longhorn-system/healthchecks-snapshot-hourly-29664077-2zz8b to activi-k3-3
+healthchecks      37m         Normal    Scheduled                pod/healthchecks-sqlite-backup-29664087-zttgr                 Successfully assigned healthchecks/healthchecks-sqlite-backup-29664087-zttgr to activi-k3-3
+longhorn-system   37m         Normal    Scheduled                pod/hindsight-snapshot-hourly-29664087-dlv66                  Successfully assigned longhorn-system/hindsight-snapshot-hourly-29664087-dlv66 to activi-k3-1.0
+hindsight         49m         Normal    Scheduled                pod/hindsight-groq-healthcheck-29664075-6hptm                 Successfully assigned hindsight/hindsight-groq-healthcheck-29664075-6hptm to activi-k3-1.0
+longhorn-system   47m         Normal    Scheduled                pod/n8n-snapshot-hourly-29664077-jscpr                        Successfully assigned longhorn-system/n8n-snapshot-hourly-29664077-jscpr to activi-k3-1.0
+hindsight         19m         Normal    Scheduled                pod/hindsight-groq-healthcheck-29664105-vn6dr                 Successfully assigned hindsight/hindsight-groq-healthcheck-29664105-vn6dr to activi-k3-1.0
+longhorn-system   57m         Normal    Scheduled                pod/prod-snapshot-hourly-29664067-wtqzd                       Successfully assigned longhorn-system/prod-snapshot-hourly-29664067-wtqzd to activi-k3-1.0
+kube-system       7d12h       Warning   DNSConfigForming         pod/coredns-ff8999cc5-flxln                                   Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 185.12.64.2 185.12.64.1 2a01:4ff:ff00::add:1
+longhorn-system   57m         Normal    Started                  pod/prod-snapshot-hourly-29664067-wtqzd                       Started container prod-snapshot-hourly
+longhorn-system   57m         Normal    SuccessfulCreate         cronjob/prod-snapshot-hourly                                  Created job prod-snapshot-hourly-29664067
+longhorn-system   57m         Normal    Created                  pod/prod-snapshot-hourly-29664067-wtqzd                       Created container: prod-snapshot-hourly
+longhorn-system   57m         Normal    Pulled                   pod/prod-snapshot-hourly-29664067-wtqzd                       Container image "docker.io/longhornio/longhorn-manager:v1.11.2" already present on machine
+longhorn-system   57m         Normal    SuccessfulCreate         job/prod-snapshot-hourly-29664067                             Created pod: prod-snapshot-hourly-29664067-wtqzd
+longhorn-system   57m         Normal    Update                   snapshot/prod-sna-bb43712b-75dc-4117-bf75-93567e4494ea        snapshot becomes ready to use
+longhorn-system   57m         Normal    Create                   snapshot/prod-sna-bb43712b-75dc-4117-bf75-93567e4494ea        successfully provisioned the snapshot
+longhorn-system   57m         Normal    Update                   snapshot/prod-sna-27230670-ea52-4318-9997-26d56cdb59ca        snapshot becomes not ready to use
+longhorn-system   56m         Normal    Completed                job/prod-snapshot-hourly-29664067                             Job completed
+longhorn-system   56m         Normal    SuccessfulDelete         cronjob/prod-snapshot-hourly                                  Deleted job prod-snapshot-hourly-29664007
+longhorn-system   56m         Normal    SawCompletedJob          cronjob/prod-snapshot-hourly                                  Saw completed job: prod-snapshot-hourly-29664067, condition: Complete
+hindsight         49m         Normal    Created                  pod/hindsight-groq-healthcheck-29664075-6hptm                 Created container: groq-healthcheck
+hindsight         49m         Normal    Pulled                   pod/hindsight-groq-healthcheck-29664075-6hptm                 Container image "docker.io/curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6" already present on machine
+hindsight         49m         Normal    SuccessfulCreate         cronjob/hindsight-groq-healthcheck                            Created job hindsight-groq-healthcheck-29664075
+hindsight         49m         Normal    SuccessfulCreate         job/hindsight-groq-healthcheck-29664075                       Created pod: hindsight-groq-healthcheck-29664075-6hptm
+hindsight         49m         Normal    Started                  pod/hindsight-groq-healthcheck-29664075-6hptm                 Started container groq-healthcheck
+hindsight         49m         Normal    Completed                job/hindsight-groq-healthcheck-29664075                       Job completed
+hindsight         49m         Normal    SawCompletedJob          cronjob/hindsight-groq-healthcheck                            Saw completed job: hindsight-groq-healthcheck-29664075, condition: Complete
+hindsight         49m         Normal    SuccessfulDelete         cronjob/hindsight-groq-healthcheck                            Deleted job hindsight-groq-healthcheck-29664030
+longhorn-system   47m         Normal    Pulled                   pod/healthchecks-snapshot-hourly-29664077-2zz8b               Container image "docker.io/longhornio/longhorn-manager:v1.11.2" already present on machine
+longhorn-system   47m         Normal    SuccessfulCreate         job/healthchecks-snapshot-hourly-29664077                     Created pod: healthchecks-snapshot-hourly-29664077-2zz8b
+longhorn-system   47m         Normal    Created                  pod/n8n-snapshot-hourly-29664077-jscpr                        Created container: n8n-snapshot-hourly
+matrix            47m         Normal    SuccessfulCreate         cronjob/matrix-matrix-stack-postgres-backup                   Created job matrix-matrix-stack-postgres-backup-29664077
+longhorn-system   47m         Normal    Started                  pod/n8n-snapshot-hourly-29664077-jscpr                        Started container n8n-snapshot-hourly
+matrix            47m         Normal    SuccessfulCreate         job/matrix-matrix-stack-postgres-backup-29664077              Created pod: matrix-matrix-stack-postgres-backup-29664077-jpwc4
+longhorn-system   47m         Normal    SuccessfulCreate         job/n8n-snapshot-hourly-29664077                              Created pod: n8n-snapshot-hourly-29664077-jscpr
+longhorn-system   47m         Normal    Start                    replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-7f9266d6   Starts pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-7f9266d6
+longhorn-system   47m         Normal    SuccessfulCreate         cronjob/healthchecks-snapshot-hourly                          Created job healthchecks-snapshot-hourly-29664077
+longhorn-system   47m         Normal    Start                    replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-9ca8afa2   Starts pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-9ca8afa2
+longhorn-system   47m         Normal    Started                  pod/healthchecks-snapshot-hourly-29664077-2zz8b               Started container healthchecks-snapshot-hourly
+longhorn-system   47m         Normal    Created                  pod/healthchecks-snapshot-hourly-29664077-2zz8b               Created container: healthchecks-snapshot-hourly
+longhorn-system   47m         Normal    Pulled                   pod/n8n-snapshot-hourly-29664077-jscpr                        Container image "docker.io/longhornio/longhorn-manager:v1.11.2" already present on machine
+longhorn-system   47m         Normal    SuccessfulCreate         cronjob/n8n-snapshot-hourly                                   Created job n8n-snapshot-hourly-29664077
+longhorn-system   47m         Normal    Start                    replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-c9f4319d   Starts pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-c9f4319d
+longhorn-system   47m         Normal    Start                    engine/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-e-0           Starts pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-e-0
+longhorn-system   47m         Normal    SuccessfulDelete         cronjob/n8n-snapshot-hourly                                   Deleted job n8n-snapshot-hourly-29664017
+longhorn-system   47m         Normal    SawCompletedJob          cronjob/n8n-snapshot-hourly                                   Saw completed job: n8n-snapshot-hourly-29664077, condition: Complete
+longhorn-system   47m         Normal    Completed                job/n8n-snapshot-hourly-29664077                              Job completed
+longhorn-system   47m         Normal    Attached                 volume/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf               volume pvc-b394b979-0996-4f72-adc1-a4aa4be71caf has been attached to activi-k3-1.0
+longhorn-system   47m         Normal    Create                   snapshot/healthch-fb406a64-05a1-48a7-ae5f-0b6678b227b0        successfully provisioned the snapshot
+longhorn-system   47m         Normal    Update                   snapshot/healthch-fb406a64-05a1-48a7-ae5f-0b6678b227b0        snapshot becomes ready to use
+longhorn-system   46m         Normal    SawCompletedJob          cronjob/healthchecks-snapshot-hourly                          Saw completed job: healthchecks-snapshot-hourly-29664077, condition: Complete
+longhorn-system   46m         Normal    SuccessfulDelete         cronjob/healthchecks-snapshot-hourly                          Deleted job healthchecks-snapshot-hourly-29664017
+longhorn-system   46m         Normal    Completed                job/healthchecks-snapshot-hourly-29664077                     Job completed
+matrix            46m         Normal    SuccessfulAttachVolume   pod/matrix-matrix-stack-postgres-backup-29664077-jpwc4        AttachVolume.Attach succeeded for volume "pvc-b394b979-0996-4f72-adc1-a4aa4be71caf"
+matrix            46m         Normal    Started                  pod/matrix-matrix-stack-postgres-backup-29664077-jpwc4        Started container pg-dump
+matrix            46m         Normal    Pulled                   pod/matrix-matrix-stack-postgres-backup-29664077-jpwc4        Container image "ghcr.io/dsactivi-2/matrix/postgres:17-alpine" already present on machine
+matrix            46m         Normal    Created                  pod/matrix-matrix-stack-postgres-backup-29664077-jpwc4        Created container: pg-dump
+matrix            46m         Normal    SawCompletedJob          cronjob/matrix-matrix-stack-postgres-backup                   Saw completed job: matrix-matrix-stack-postgres-backup-29664077, condition: Complete
+matrix            46m         Normal    Completed                job/matrix-matrix-stack-postgres-backup-29664077              Job completed
+longhorn-system   46m         Normal    Stop                     replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-7f9266d6   Stops pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-7f9266d6
+longhorn-system   46m         Normal    Stop                     replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-9ca8afa2   Stops pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-9ca8afa2
+longhorn-system   46m         Normal    Stop                     replica/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-c9f4319d   Stops pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-r-c9f4319d
+longhorn-system   46m         Normal    Stop                     engine/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-e-0           Stops pvc-b394b979-0996-4f72-adc1-a4aa4be71caf-e-0
+longhorn-system   46m         Normal    Detached                 volume/pvc-b394b979-0996-4f72-adc1-a4aa4be71caf               volume pvc-b394b979-0996-4f72-adc1-a4aa4be71caf has been detached
+healthchecks      37m         Normal    Created                  pod/healthchecks-sqlite-backup-29664087-zttgr                 Created container: sqlite-backup
+healthchecks      37m         Normal    Started                  pod/healthchecks-sqlite-backup-29664087-zttgr                 Started container sqlite-backup
+longhorn-system   37m         Normal    Pulled                   pod/hindsight-snapshot-hourly-29664087-dlv66                  Container image "docker.io/longhornio/longhorn-manager:v1.11.2" already present on machine
+longhorn-system   37m         Normal    Created                  pod/hindsight-snapshot-hourly-29664087-dlv66                  Created container: hindsight-snapshot-hourly
+longhorn-system   37m         Normal    Started                  pod/hindsight-snapshot-hourly-29664087-dlv66                  Started container hindsight-snapshot-hourly
+longhorn-system   37m         Normal    SuccessfulCreate         job/hindsight-snapshot-hourly-29664087                        Created pod: hindsight-snapshot-hourly-29664087-dlv66
+healthchecks      37m         Normal    SuccessfulCreate         job/healthchecks-sqlite-backup-29664087                       Created pod: healthchecks-sqlite-backup-29664087-zttgr
+longhorn-system   37m         Normal    SuccessfulCreate         cronjob/hindsight-snapshot-hourly                             Created job hindsight-snapshot-hourly-29664087
+healthchecks      37m         Normal    Pulled                   pod/healthchecks-sqlite-backup-29664087-zttgr                 Container image "healthchecks/healthchecks@sha256:6b5f593d40994345053f05f86decfa9e17ab1e4422df2ae58abd032a7b14d8f6" already present on machine
+healthchecks      37m         Normal    SuccessfulCreate         cronjob/healthchecks-sqlite-backup                            Created job healthchecks-sqlite-backup-29664087
+longhorn-system   37m         Normal    SawCompletedJob          cronjob/hindsight-snapshot-hourly                             Saw completed job: hindsight-snapshot-hourly-29664087, condition: Complete
+longhorn-system   37m         Normal    SuccessfulDelete         cronjob/hindsight-snapshot-hourly                             Deleted job hindsight-snapshot-hourly-29664027
+longhorn-system   37m         Normal    Completed                job/hindsight-snapshot-hourly-29664087                        Job completed
+healthchecks      37m         Normal    Completed                job/healthchecks-sqlite-backup-29664087                       Job completed
+healthchecks      37m         Normal    SawCompletedJob          cronjob/healthchecks-sqlite-backup                            Saw completed job: healthchecks-sqlite-backup-29664087, condition: Complete
+hindsight         34m         Normal    Created                  pod/hindsight-groq-healthcheck-29664090-hw7q4                 Created container: groq-healthcheck
+hindsight         34m         Normal    SuccessfulCreate         cronjob/hindsight-groq-healthcheck                            Created job hindsight-groq-healthcheck-29664090
+hindsight         34m         Normal    Pulled                   pod/hindsight-groq-healthcheck-29664090-hw7q4                 Container image "docker.io/curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6" already present on machine
+hindsight         34m         Normal    SuccessfulCreate         job/hindsight-groq-healthcheck-29664090                       Created pod: hindsight-groq-healthcheck-29664090-hw7q4
+hindsight         34m         Normal    Started                  pod/hindsight-groq-healthcheck-29664090-hw7q4                 Started container groq-healthcheck
+hindsight         34m         Normal    SuccessfulDelete         cronjob/hindsight-groq-healthcheck                            Deleted job hindsight-groq-healthcheck-29664045
+hindsight         34m         Normal    SawCompletedJob          cronjob/hindsight-groq-healthcheck                            Saw completed job: hindsight-groq-healthcheck-29664090, condition: Complete
+hindsight         34m         Normal    Completed                job/hindsight-groq-healthcheck-29664090                       Job completed
+hindsight         23m         Normal    SuccessfulCreate         job/hindsight-postgres-pgdump-29664101                        Created pod: hindsight-postgres-pgdump-29664101-7sfg2
+hindsight         23m         Normal    SuccessfulCreate         cronjob/hindsight-postgres-pgdump                             Created job hindsight-postgres-pgdump-29664101
+hindsight         23m         Normal    Pulled                   pod/hindsight-postgres-pgdump-29664101-7sfg2                  Container image "docker.io/library/postgres:16-alpine@sha256:16bc17c64a573ef34162af9298258d1aec548232985b33ed7b1eac33ba35c229" already present on machine
+hindsight         23m         Normal    Created                  pod/hindsight-postgres-pgdump-29664101-7sfg2                  Created container: pgdump
+hindsight         23m         Normal    Started                  pod/hindsight-postgres-pgdump-29664101-7sfg2                  Started container pgdump
+hindsight         23m         Normal    Created                  pod/hindsight-postgres-pgdump-29664101-7sfg2                  Created container: upload
+hindsight         23m         Normal    Pulled                   pod/hindsight-postgres-pgdump-29664101-7sfg2                  Container image "docker.io/amazon/aws-cli@sha256:cf53765c0de54ad3a8ea21818f1c4c845a8cf7ca87831c078a00fef244031493" already present on machine
+hindsight         23m         Normal    Started                  pod/hindsight-postgres-pgdump-29664101-7sfg2                  Started container upload
+hindsight         22m         Normal    SawCompletedJob          cronjob/hindsight-postgres-pgdump                             Saw completed job: hindsight-postgres-pgdump-29664101, condition: Complete
+hindsight         22m         Normal    Completed                job/hindsight-postgres-pgdump-29664101                        Job completed
+hindsight         19m         Normal    SuccessfulCreate         job/hindsight-groq-healthcheck-29664105                       Created pod: hindsight-groq-healthcheck-29664105-vn6dr
+hindsight         19m         Normal    Created                  pod/hindsight-groq-healthcheck-29664105-vn6dr                 Created container: groq-healthcheck
+hindsight         19m         Normal    Pulled                   pod/hindsight-groq-healthcheck-29664105-vn6dr                 Container image "docker.io/curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6" already present on machine
+hindsight         19m         Normal    SuccessfulCreate         cronjob/hindsight-groq-healthcheck                            Created job hindsight-groq-healthcheck-29664105
+hindsight         19m         Normal    Started                  pod/hindsight-groq-healthcheck-29664105-vn6dr                 Started container groq-healthcheck
+hindsight         19m         Normal    SawCompletedJob          cronjob/hindsight-groq-healthcheck                            Saw completed job: hindsight-groq-healthcheck-29664105, condition: Complete
+hindsight         19m         Normal    Completed                job/hindsight-groq-healthcheck-29664105                       Job completed
+hindsight         19m         Normal    SuccessfulDelete         cronjob/hindsight-groq-healthcheck                            Deleted job hindsight-groq-healthcheck-29664060
+hindsight         4m6s        Normal    SuccessfulCreate         job/hindsight-groq-healthcheck-29664120                       Created pod: hindsight-groq-healthcheck-29664120-lrzdp
+hindsight         4m6s        Normal    SuccessfulCreate         cronjob/hindsight-groq-healthcheck                            Created job hindsight-groq-healthcheck-29664120
+hindsight         4m6s        Normal    Created                  pod/hindsight-groq-healthcheck-29664120-lrzdp                 Created container: groq-healthcheck
+hindsight         4m6s        Normal    Pulled                   pod/hindsight-groq-healthcheck-29664120-lrzdp                 Container image "docker.io/curlimages/curl:8.16.0@sha256:463eaf6072688fe96ac64fa623fe73e1dbe25d8ad6c34404a669ad3ce1f104b6" already present on machine
+hindsight         4m5s        Normal    Started                  pod/hindsight-groq-healthcheck-29664120-lrzdp                 Started container groq-healthcheck
+hindsight         4m2s        Normal    Completed                job/hindsight-groq-healthcheck-29664120                       Job completed
+hindsight         4m2s        Normal    SawCompletedJob          cronjob/hindsight-groq-healthcheck                            Saw completed job: hindsight-groq-healthcheck-29664120, condition: Complete
+hindsight         4m2s        Normal    SuccessfulDelete         cronjob/hindsight-groq-healthcheck                            Deleted job hindsight-groq-healthcheck-29664075
+monitoring        2m33s       Warning   DNSConfigForming         pod/kube-prometheus-stack-prometheus-node-exporter-tq7w7      Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 185.12.64.1 185.12.64.2 2a01:4ff:ff00::add:2
+monitoring        2m29s       Warning   DNSConfigForming         pod/kube-prometheus-stack-prometheus-node-exporter-5vcmr      Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 185.12.64.1 185.12.64.2 2a01:4ff:ff00::add:2
+monitoring        2m26s       Warning   DNSConfigForming         pod/kube-prometheus-stack-prometheus-node-exporter-4k7sr      Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 185.12.64.2 185.12.64.1 2a01:4ff:ff00::add:1
+kube-system       18s         Warning   DNSConfigForming         pod/coredns-dbd8c85f7-8f64r                                   Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 185.12.64.2 185.12.64.1 2a01:4ff:ff00::add:1

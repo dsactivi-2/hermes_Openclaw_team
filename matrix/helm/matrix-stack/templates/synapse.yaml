@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-synapse
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: synapse
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8008
+      targetPort: http
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: synapse
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-synapse
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: synapse
+spec:
+  serviceName: {{ include "matrix-stack.fullname" . }}-synapse
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: synapse
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-stack.labels" . | nindent 8 }}
+        app.kubernetes.io/component: synapse
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      securityContext:
+        fsGroup: 991
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: render-synapse-config
+          image: {{ .Values.synapse.image | quote }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -c
+            - |
+              import os
+              from pathlib import Path
+
+              replacements = {
+                  "__DB_PASSWORD__": os.environ["DB_PASSWORD"],
+                  "__REGISTRATION_SHARED_SECRET__": os.environ["REGISTRATION_SHARED_SECRET"],
+              }
+              for key in ("TURN_PASSWORD", "SMTP_USER", "SMTP_PASSWORD"):
+                  value = os.environ.get(key)
+                  if value is not None:
+                      replacements[f"__{key}__"] = value
+              data = Path("/config-template/homeserver.yaml").read_text(encoding="utf-8")
+              for old, new in replacements.items():
+                  data = data.replace(old, new)
+              Path("/data").mkdir(parents=True, exist_ok=True)
+              Path("/data/homeserver.yaml").write_text(data, encoding="utf-8")
+              Path("/data/homeserver.log.config").write_text(
+                  Path("/config-template/homeserver.log.config").read_text(encoding="utf-8"),
+                  encoding="utf-8",
+              )
+              Path("/data/homeserver.signing.key").write_text(
+                  Path("/secrets/homeserver.signing.key").read_text(encoding="utf-8"),
+                  encoding="utf-8",
+              )
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: db-password
+            - name: REGISTRATION_SHARED_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: registration-shared-secret
+            {{- if .Values.coturn.enabled }}
+            - name: TURN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: turn-password
+            {{- end }}
+            {{- if .Values.smtp.enabled }}
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: smtp-user
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: smtp-password
+            {{- end }}
+          volumeMounts:
+            - name: synapse-data
+              mountPath: /data
+            - name: synapse-config-template
+              mountPath: /config-template
+              readOnly: true
+            - name: matrix-secrets
+              mountPath: /secrets
+              readOnly: true
+      containers:
+        - name: synapse
+          image: {{ .Values.synapse.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8008
+          env:
+            - name: SYNAPSE_CONFIG_PATH
+              value: /data/homeserver.yaml
+          volumeMounts:
+            - name: synapse-data
+              mountPath: /data
+            - name: synapse-media
+              mountPath: /data/media_store
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 15
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+          resources:
+            {{- toYaml .Values.synapse.resources | nindent 12 }}
+      volumes:
+        - name: synapse-data
+          emptyDir: {}
+        - name: synapse-config-template
+          configMap:
+            name: {{ include "matrix-stack.fullname" . }}-synapse-config
+        - name: matrix-secrets
+          secret:
+            secretName: {{ include "matrix-stack.secretName" . }}
+  volumeClaimTemplates:
+    - metadata:
+        name: synapse-media
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.synapse.media.storage.storageClassName | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.synapse.media.storage.size | quote }}

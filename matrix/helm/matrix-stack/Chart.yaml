@@ -1,0 +1,6 @@
+apiVersion: v2
+name: matrix-stack
+description: Matrix Synapse stack for K3s with Longhorn-backed persistent storage
+type: application
+version: 0.1.0
+appVersion: "1.153.0"

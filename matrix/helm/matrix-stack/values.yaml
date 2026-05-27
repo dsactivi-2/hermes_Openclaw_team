@@ -1,0 +1,196 @@
+global:
+  nameOverride: ""
+  fullnameOverride: ""
+
+namespace:
+  create: false
+  name: matrix
+
+imagePullSecrets:
+  - name: ghcr-pull-secret
+
+longhorn:
+  storageClass:
+    create: false
+    name: longhorn
+    provisioner: driver.longhorn.io
+    reclaimPolicy: Retain
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+    parameters:
+      numberOfReplicas: "2"
+      staleReplicaTimeout: "30"
+      fsType: ext4
+
+domains:
+  base: activi-apps.io
+  matrix: matrix.activi-apps.io
+  element: space.activi-apps.io
+  elementAdmin: ""
+  ketesa: synapse-admin.activi-apps.io
+
+urls:
+  matrixBase: https://matrix.activi-apps.io
+  elementBase: https://space.activi-apps.io
+  ketesaBase: https://synapse-admin.activi-apps.io
+
+app:
+  brand: Activi Space
+
+tls:
+  enabled: true
+  clusterIssuer: letsencrypt-prod
+  secretNames:
+    matrix: matrix-tls
+    element: element-tls
+    elementAdmin: element-admin-tls
+    ketesa: ketesa-tls
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+
+nginx:
+  enabled: true
+  proxyBodySize: 100m
+  proxyReadTimeout: "300"
+  proxySendTimeout: "300"
+  sslRedirect: true
+  rateLimits:
+    enabled: false
+    public:
+      connections: "20"
+      requestsPerMinute: "120"
+    admin:
+      connections: "5"
+      requestsPerMinute: "30"
+
+adminAuth:
+  enabled: true
+  secretName: matrix-admin-basic-auth
+  realm: "Matrix Admin"
+
+secrets:
+  create: false
+  existingSecret: matrix-stack-secrets
+  data:
+    dbPassword: ""
+    matrixAdminPassword: ""
+    registrationSharedSecret: ""
+    smtpUser: ""
+    smtpPassword: ""
+    turnPassword: ""
+    synapseSigningKey: ""
+
+postgres:
+  image: ghcr.io/dsactivi-2/matrix/postgres:17-alpine
+  database: synapse
+  username: synapse
+  port: 5432
+  storage:
+    size: 30Gi
+    storageClassName: longhorn
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+
+synapse:
+  image: ghcr.io/dsactivi-2/matrix/synapse:v1.153.0
+  reportStats: false
+  listenerResources: client
+  msc4186Enabled: true
+  maxUploadSize: 100M
+  mediaRetention:
+    local: 180d
+    remote: 30d
+  enableRegistration: false
+  trustedKeyServer: matrix.org
+  media:
+    storage:
+      size: 100Gi
+      storageClassName: longhorn
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 3Gi
+
+element:
+  image: ghcr.io/dsactivi-2/matrix/element-web:v1.12.18
+  theme: dark
+  showLabsSettings: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+elementAdmin:
+  enabled: false
+  image: ghcr.io/dsactivi-2/matrix/element-admin:0.1.11
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+ketesa:
+  enabled: true
+  image: ghcr.io/dsactivi-2/matrix/ketesa:v1.2.1-7-g646f925
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+coturn:
+  enabled: false
+  image: ghcr.io/dsactivi-2/matrix/coturn:4.11.0-r0
+  hostNetwork: true
+  realm: activi-apps.io
+  host: ""
+  username: matrix
+  port: 3478
+  tlsPort: 5349
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+smtp:
+  enabled: false
+  host: ""
+  port: 587
+  requireTls: true
+  fromName: Activi Matrix
+  fromEmail: matrix@activi-apps.io
+  enableNotifs: false
+  notifForNewUsers: false
+
+hermes:
+  enabled: false
+  image: nousresearch/hermes-agent@sha256:b6e41c155d6bfce5ad83c5d0fec670086db8a43250e4511c9474134be5482d33
+
+backup:
+  enabled: true
+  schedule: "17 3 * * *"
+  image: ghcr.io/dsactivi-2/matrix/postgres:17-alpine
+  storage:
+    size: 50Gi
+    storageClassName: longhorn

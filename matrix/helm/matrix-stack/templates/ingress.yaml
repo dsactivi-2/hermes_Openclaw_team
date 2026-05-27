@@ -1,0 +1,148 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-matrix
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer | quote }}
+    {{- include "matrix-stack.nginxPublicAnnotations" . | nindent 4 }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- if .Values.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.domains.matrix | quote }}
+      secretName: {{ .Values.tls.secretNames.matrix | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.domains.matrix | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-synapse
+                port:
+                  name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer | quote }}
+    {{- include "matrix-stack.nginxPublicAnnotations" . | nindent 4 }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- if .Values.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.domains.element | quote }}
+      secretName: {{ .Values.tls.secretNames.element | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.domains.element | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-element
+                port:
+                  name: http
+---
+{{- if .Values.elementAdmin.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-element-admin
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer | quote }}
+    {{- include "matrix-stack.nginxAdminAnnotations" . | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- if .Values.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.domains.elementAdmin | quote }}
+      secretName: {{ .Values.tls.secretNames.elementAdmin | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.domains.elementAdmin | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-element-admin
+                port:
+                  name: http
+{{- end }}
+---
+{{- if .Values.ketesa.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-ketesa
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.tls.clusterIssuer | quote }}
+    {{- include "matrix-stack.nginxAdminAnnotations" . | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- if .Values.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.domains.ketesa | quote }}
+      secretName: {{ .Values.tls.secretNames.ketesa | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.domains.ketesa | quote }}
+      http:
+        paths:
+          - path: /_matrix
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-synapse
+                port:
+                  name: http
+          - path: /_synapse/admin
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-synapse
+                port:
+                  name: http
+          - path: /.well-known/matrix
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-synapse
+                port:
+                  name: http
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "matrix-stack.fullname" . }}-ketesa
+                port:
+                  name: http
+{{- end }}
+{{- end }}

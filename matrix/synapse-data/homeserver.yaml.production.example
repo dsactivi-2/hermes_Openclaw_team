@@ -1,0 +1,67 @@
+# This is a documentation template. The active production file is generated from:
+# templates/synapse/homeserver.yaml.tmpl
+
+server_name: "${MATRIX_DOMAIN}"
+public_baseurl: "${MATRIX_BASE_URL}"
+report_stats: ${SYNAPSE_REPORT_STATS}
+serve_server_wellknown: true
+
+pid_file: /data/homeserver.pid
+web_client_location: "${ELEMENT_BASE_URL}"
+
+database:
+  name: psycopg2
+  args:
+    user: ${POSTGRES_USER}
+    password: "${DB_PASSWORD}"
+    database: ${POSTGRES_DB}
+    host: ${POSTGRES_HOST}
+    port: ${POSTGRES_PORT}
+    cp_min: ${POSTGRES_CP_MIN}
+    cp_max: ${POSTGRES_CP_MAX}
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ['0.0.0.0']
+    resources:
+      - names: [${SYNAPSE_LISTENER_RESOURCES}]
+
+experimental_features:
+  msc4186_enabled: ${SYNAPSE_MSC4186_ENABLED}
+
+max_upload_size: ${SYNAPSE_MAX_UPLOAD_SIZE}
+media_store_path: "/data/media_store"
+media_retention:
+  local_media_lifetime: ${SYNAPSE_LOCAL_MEDIA_LIFETIME}
+  remote_media_lifetime: ${SYNAPSE_REMOTE_MEDIA_LIFETIME}
+enable_registration: ${SYNAPSE_ENABLE_REGISTRATION}
+registration_shared_secret: "${REGISTRATION_SHARED_SECRET}"
+
+turn_uris:
+  - "turn:${TURN_HOST}:${TURN_PORT}?transport=udp"
+  - "turn:${TURN_HOST}:${TURN_PORT}?transport=tcp"
+turn_user_lifetime: ${TURN_USER_LIFETIME}
+turn_allow_guests: ${TURN_ALLOW_GUESTS}
+turn_username: "${TURN_USERNAME}"
+turn_password: "${TURN_PASSWORD}"
+
+email:
+  smtp_host: ${SMTP_HOST}
+  smtp_port: ${SMTP_PORT}
+  require_transport_security: ${SMTP_REQUIRE_TLS}
+  smtp_user: "${SMTP_USER}"
+  smtp_pass: "${SMTP_PASSWORD}"
+  notif_from: "${SMTP_FROM_NAME} <${SMTP_FROM_EMAIL}>"
+  app_name: "${APP_BRAND}"
+  enable_notifs: ${SMTP_ENABLE_NOTIFS}
+  notif_for_new_users: ${SMTP_NOTIF_FOR_NEW_USERS}
+  client_base_url: "${ELEMENT_BASE_URL}"
+
+log_config: "/data/homeserver.log.config"
+signing_key_path: "/data/homeserver.signing.key"
+
+trusted_key_servers:
+  - server_name: "${TRUSTED_KEY_SERVER}"

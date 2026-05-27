@@ -1,0 +1,49 @@
+K3s Cleanup Inventory (READ ONLY)
+Generated (UTC): 2026-05-27T00:58:36Z
+Generated (Local): 2026-05-27 02:58:36 CEST
+SSH host: k3-1
+Output dir: /Users/activi/Documents/activi K3s/reports/k3s-cleanup-inventory_2026-05-27_02-58-36
+
+== Overall Status ==
+STATUS:                    PASS
+
+== Safety Guardrails ==
+- This script only runs read-only kubectl commands (via ssh).
+- It does not run: kubectl delete/patch/apply/edit/annotate/label/scale/rollout/cordon/drain, helm uninstall.
+- It does not read or decode Kubernetes Secrets.
+
+== Connectivity ==
+SSH to host:               FAIL (see ssh_check.stderr.txt)
+
+== Required Checks (Raw Outputs Saved) ==
+kubectl get pods -A -o wide: 01_get_pods_all_wide.stdout.txt
+kubectl get deploy,sts,ds,job,cronjob,pvc,ingress,svc -A: 02_get_workloads_core.stdout.txt
+kubectl get ns:            03_get_namespaces.stdout.txt
+
+== Additional Read-Only Inventory (Raw Outputs Saved) ==
+kubectl get nodes -o wide: 04_get_nodes.stdout.txt
+kubectl get events (tail 200): 05_get_events_recent.stdout.txt
+kubectl get rs -A:         06_get_rs_all.stdout.txt
+kubectl get endpoints -A:  07_get_endpoints_all.stdout.txt
+kubectl get ingressclass:  08_get_ingressclasses.stdout.txt
+kubectl get pv:            09_get_pv.stdout.txt
+kubectl get storageclass:  10_get_storageclasses.stdout.txt
+
+== Heuristic Findings (No Destructive Actions; Verify Before Cleanup) ==
+Pods scan:                 PASS_WITH_GAPS (pods output missing/empty)
+Nodes scan:                PASS_WITH_GAPS (nodes output missing/empty)
+Events scan:               PASS_WITH_GAPS (events output missing/empty)
+Workloads scan:            PASS_WITH_GAPS (workloads output missing/empty)
+PV scan:                   PASS_WITH_GAPS (pv output missing/empty)
+
+== Candidate Cleanup Buckets (All REQUIRE human validation) ==
+- Old/unused resources cannot be determined with certainty from this report alone.
+- If anything is ambiguous, treat it as UNCLEAR and do not clean up automatically.
+- Typical candidates (UNCLEAR until validated):
+  - Evicted/Failed Pods that are not owned by an active controller.
+  - Completed Jobs that are safe to remove per retention policy.
+  - Orphaned ReplicaSets (no longer referenced by a Deployment) once confirmed.
+  - PVs in Released state after confirming they are not needed and data is safe.
+
+== Final Overall Status ==
+STATUS:                    PASS_WITH_GAPS

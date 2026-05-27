@@ -1,0 +1,62 @@
+server_name: "matrix.activi.io"
+public_baseurl: "http://127.0.0.1:8081"
+report_stats: false
+serve_server_wellknown: true
+
+pid_file: /data/homeserver.pid
+web_client_location: "http://127.0.0.1:8081"
+
+database:
+  name: psycopg2
+  args:
+    user: synapse
+    password: "REDACTED_FOR_PUBLIC_DOWNLOAD"
+    database: synapse
+    host: db
+    port: 5432
+    cp_min: 5
+    cp_max: 10
+
+listeners:
+  - port: 8008
+    tls: false
+    type: http
+    x_forwarded: true
+    bind_addresses: ['0.0.0.0']
+    resources:
+      - names: [client]
+
+experimental_features:
+  msc4186_enabled: true
+
+max_upload_size: 100M
+media_store_path: "/data/media_store"
+media_retention:
+  local_media_lifetime: 180d
+  remote_media_lifetime: 30d
+enable_registration: false
+registration_shared_secret: "REDACTED_FOR_PUBLIC_DOWNLOAD"
+
+turn_uris:
+  - "turn:127.0.0.1:3478?transport=udp"
+  - "turn:127.0.0.1:3478?transport=tcp"
+turn_user_lifetime: 1h
+turn_allow_guests: false
+turn_username: "matrix"
+turn_password: "REDACTED_FOR_PUBLIC_DOWNLOAD"
+
+email:
+  smtp_host: mailpit
+  smtp_port: 1025
+  require_transport_security: false
+  notif_from: "Activi Matrix <matrix@activi.io>"
+  app_name: "Activi Space"
+  enable_notifs: true
+  notif_for_new_users: false
+  client_base_url: "http://127.0.0.1:8081"
+
+log_config: "/data/homeserver.log.config"
+signing_key_path: "/data/homeserver.signing.key"
+
+trusted_key_servers:
+  - server_name: "matrix.org"

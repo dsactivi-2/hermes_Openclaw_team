@@ -1,0 +1,48 @@
+services:
+  traefik:
+    ports: !override
+      - "80:80"
+      - "8443:443"
+      - "8081:8081"
+      - "8082:8082"
+    command: !override
+      - --api.dashboard=true
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --accesslog=true
+      - --accesslog.fields.headers.defaultmode=drop
+      - --accesslog.fields.headers.names.User-Agent=keep
+      - --accesslog.fields.headers.names.X-Forwarded-For=keep
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.local.address=:8081
+      - --entrypoints.localadmin.address=:8082
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+    volumes: !override
+      - ./traefik/dynamic.local.yml:/etc/traefik/dynamic.yml:ro
+      - traefik-data:/letsencrypt
+
+  element:
+    volumes: !override
+      - ./element-config.local.json:/app/config.json:ro
+
+  synapse:
+    environment:
+      SYNAPSE_CONFIG_PATH: /data/homeserver.local.yaml
+
+  ketesa:
+    volumes: !override
+      - ./ketesa-config.local.json:/var/public/config.json:ro
+
+  mailpit:
+    image: ${MAILPIT_IMAGE:-axllent/mailpit:v1.21}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    ports:
+      - "8025:8025"

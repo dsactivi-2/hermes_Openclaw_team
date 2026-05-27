@@ -1,0 +1,33 @@
+K3s Cleanup Inventory (READ ONLY)
+Generated (UTC): 2026-05-27T00:58:54Z
+Generated (Local): 2026-05-27 02:58:54 CEST
+SSH host: k3-1
+Output dir: /Users/activi/Documents/activi K3s/reports/k3s-cleanup-inventory_2026-05-27_02-58-54
+
+== Overall Status ==
+STATUS:                    PASS
+
+== Safety Guardrails ==
+- This script only runs read-only kubectl commands (via ssh).
+- It does not run: kubectl delete/patch/apply/edit/annotate/label/scale/rollout/cordon/drain, helm uninstall.
+- It does not read or decode Kubernetes Secrets.
+
+== Connectivity ==
+SSH to host:               PASS
+
+== Required Checks (Raw Outputs Saved) ==
+kubectl get pods -A -o wide: 01_get_pods_all_wide.stdout.txt
+kubectl get deploy,sts,ds,job,cronjob,pvc,ingress,svc -A: 02_get_workloads_core.stdout.txt
+kubectl get ns:            03_get_namespaces.stdout.txt
+
+== Additional Read-Only Inventory (Raw Outputs Saved) ==
+kubectl get nodes -o wide: 04_get_nodes.stdout.txt
+kubectl get events (tail 200): 05_get_events_recent.stdout.txt
+kubectl get rs -A:         06_get_rs_all.stdout.txt
+kubectl get endpoints -A:  07_get_endpoints_all.stdout.txt
+kubectl get ingressclass:  08_get_ingressclasses.stdout.txt
+kubectl get pv:            09_get_pv.stdout.txt
+kubectl get storageclass:  10_get_storageclasses.stdout.txt
+
+== Heuristic Findings (No Destructive Actions; Verify Before Cleanup) ==
+Pods w/ non-ready keywords: WARN (24) -> review 01_get_pods_all_wide.stdout.txt

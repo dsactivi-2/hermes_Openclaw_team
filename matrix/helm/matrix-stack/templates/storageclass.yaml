@@ -1,0 +1,16 @@
+{{- if .Values.longhorn.storageClass.create }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.longhorn.storageClass.name | quote }}
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+provisioner: {{ .Values.longhorn.storageClass.provisioner | quote }}
+reclaimPolicy: {{ .Values.longhorn.storageClass.reclaimPolicy }}
+allowVolumeExpansion: {{ .Values.longhorn.storageClass.allowVolumeExpansion }}
+volumeBindingMode: {{ .Values.longhorn.storageClass.volumeBindingMode }}
+parameters:
+  {{- range $key, $value := .Values.longhorn.storageClass.parameters }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,204 @@
+networks:
+  matrix-net:
+    driver: bridge
+
+services:
+  traefik:
+    image: ${TRAEFIK_IMAGE:-traefik:v3.3}
+    restart: unless-stopped
+    container_name: traefik
+    networks:
+      - matrix-net
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOCKER_API_VERSION: "1.40"
+    volumes:
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - traefik-data:/letsencrypt
+    command:
+      - --api.dashboard=true
+      - --providers.file.filename=/etc/traefik/dynamic.yml
+      - --accesslog=true
+      - --accesslog.fields.headers.defaultmode=drop
+      - --accesslog.fields.headers.names.User-Agent=keep
+      - --accesslog.fields.headers.names.X-Forwarded-For=keep
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge=true
+      - --certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+
+  db:
+    image: ${POSTGRES_IMAGE:-postgres:17-alpine}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    environment:
+      POSTGRES_DB: synapse
+      POSTGRES_USER: synapse
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U synapse -d synapse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  synapse:
+    image: ${SYNAPSE_IMAGE:-matrixdotorg/synapse:latest}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    depends_on:
+      synapse-permissions:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    environment:
+      SYNAPSE_CONFIG_PATH: /data/homeserver.yaml
+    volumes:
+      - ./synapse-data:/data
+      - synapse-media:/data/media_store
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.matrix.rule=Host(`${MATRIX_DOMAIN}`)
+      - traefik.http.routers.matrix.entrypoints=websecure
+      - traefik.http.routers.matrix.tls.certresolver=letsencrypt
+      - traefik.http.services.matrix.loadbalancer.server.port=8008
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 1.5G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  synapse-permissions:
+    image: ${SYNAPSE_IMAGE:-matrixdotorg/synapse:latest}
+    restart: "no"
+    entrypoint: ["sh", "-c", "mkdir -p /data/media_store && chown -R 991:991 /data/media_store"]
+    networks:
+      - matrix-net
+    volumes:
+      - synapse-media:/data/media_store
+
+  element:
+    image: ${ELEMENT_IMAGE:-vectorim/element-web:latest}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    volumes:
+      - ./element-config.json:/app/config.json:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.element.rule=Host(`${ELEMENT_DOMAIN}`)
+      - traefik.http.routers.element.entrypoints=websecure
+      - traefik.http.routers.element.tls.certresolver=letsencrypt
+      - traefik.http.services.element.loadbalancer.server.port=80
+
+  element-admin:
+    image: ${ELEMENT_ADMIN_IMAGE:-oci.element.io/element-admin:latest}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    environment:
+      SERVER_NAME: ${MATRIX_DOMAIN}
+
+  ketesa:
+    image: ${KETESA_IMAGE:-ghcr.io/etkecc/ketesa:latest}
+    restart: unless-stopped
+    networks:
+      - matrix-net
+    volumes:
+      - ./ketesa-config.json:/var/public/config.json:ro
+
+  sena:
+    image: ${HERMES_IMAGE:-nousresearch/hermes-agent:latest}
+    restart: unless-stopped
+    command: gateway run
+    networks:
+      - matrix-net
+    depends_on:
+      - synapse
+    environment:
+      HERMES_HOME: /opt/data
+      HERMES_AGENT_NAME: sena
+      HERMES_MATRIX_HOMESERVER: ${MATRIX_HOMESERVER_URL}
+      MATRIX_ALLOWED_USERS: ${SENA_MATRIX_ALLOWED_USERS}
+      MATRIX_USER_ID: ${SENA_MATRIX_USER_ID}
+      MATRIX_ACCESS_TOKEN: ${SENA_MATRIX_ACCESS_TOKEN}
+    volumes:
+      - hermes-sena:/opt/data
+      - ./agents/sena/SOUL.md:/opt/data/SOUL.md:ro
+      - ./agents/sena/config.yaml:/opt/data/config.yaml:ro
+      - ./agents/sena/skills/sena-agent-builder:/opt/data/skills/sena-agent-builder:ro
+      - ./.agents/skills/hermes-agent:/opt/data/skills/hermes-agent:ro
+      - ./.agents/skills/hermes-agent-skill-authoring:/opt/data/skills/hermes-agent-skill-authoring:ro
+      - ./agents/shared:/opt/activi/shared:ro
+    healthcheck:
+      test: ["CMD", "echo", "healthy"]
+      interval: 30s
+    profiles:
+      - hermes
+
+  activi:
+    image: ${HERMES_IMAGE:-nousresearch/hermes-agent:latest}
+    restart: unless-stopped
+    command: gateway run
+    networks:
+      - matrix-net
+    depends_on:
+      - synapse
+    environment:
+      HERMES_HOME: /opt/data
+      HERMES_AGENT_NAME: activi
+      HERMES_MATRIX_HOMESERVER: ${MATRIX_HOMESERVER_URL}
+      MATRIX_ALLOWED_USERS: ${ACTIVI_MATRIX_ALLOWED_USERS}
+      MATRIX_USER_ID: ${ACTIVI_MATRIX_USER_ID}
+      MATRIX_ACCESS_TOKEN: ${ACTIVI_MATRIX_ACCESS_TOKEN}
+    volumes:
+      - hermes-activi:/opt/data
+      - ./agents/activi/SOUL.md:/opt/data/SOUL.md:ro
+      - ./agents/activi/config.yaml:/opt/data/config.yaml:ro
+      - ./agents/activi/skills/activi-ops-admin:/opt/data/skills/activi-ops-admin:ro
+      - ./.agents/skills/hermes-agent:/opt/data/skills/hermes-agent:ro
+      - ./.agents/skills/hermes-agent-skill-authoring:/opt/data/skills/hermes-agent-skill-authoring:ro
+      - ./.agents/skills/agentmail:/opt/data/skills/agentmail:ro
+      - ./agents/shared:/opt/activi/shared:ro
+    healthcheck:
+      test: ["CMD", "echo", "healthy"]
+      interval: 30s
+    profiles:
+      - hermes
+
+  coturn:
+    image: ${COTURN_IMAGE:-coturn/coturn:latest}
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TURN_REALM: ${TURN_REALM}
+      TURN_USER: ${TURN_USERNAME:-matrix}:${TURN_PASSWORD}
+    ports:
+      - "3478:3478/tcp"
+      - "3478:3478/udp"
+      - "5349:5349/tcp"
+
+volumes:
+  traefik-data:
+  db:
+  synapse-media:
+  hermes-sena:
+  hermes-activi:

@@ -1,0 +1,46 @@
+namespace:
+  create: false
+  name: matrix
+
+imagePullSecrets:
+  - name: ghcr-pull-secret
+
+longhorn:
+  storageClass:
+    create: false
+    name: longhorn
+    parameters:
+      numberOfReplicas: "3"
+
+ingress:
+  className: nginx
+
+nginx:
+  enabled: true
+  proxyBodySize: 100m
+  proxyReadTimeout: "300"
+  proxySendTimeout: "300"
+  sslRedirect: true
+  rateLimits:
+    enabled: false
+
+tls:
+  enabled: true
+  clusterIssuer: letsencrypt-prod
+
+postgres:
+  storage:
+    size: 30Gi
+    storageClassName: longhorn
+
+synapse:
+  media:
+    storage:
+      size: 100Gi
+      storageClassName: longhorn
+
+backup:
+  enabled: true
+  storage:
+    size: 50Gi
+    storageClassName: longhorn

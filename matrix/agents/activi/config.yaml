@@ -1,0 +1,4 @@
+terminal:
+  backend: local
+  cwd: /opt/activi/shared
+  timeout: 240

@@ -1,0 +1,51 @@
+{{- if .Values.coturn.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-coturn
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: coturn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: coturn
+  template:
+    metadata:
+      labels:
+        {{- include "matrix-stack.labels" . | nindent 8 }}
+        app.kubernetes.io/component: coturn
+    spec:
+      hostNetwork: {{ .Values.coturn.hostNetwork }}
+      dnsPolicy: ClusterFirstWithHostNet
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      containers:
+        - name: coturn
+          image: {{ .Values.coturn.image | quote }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: turn-tcp
+              containerPort: {{ .Values.coturn.port }}
+              protocol: TCP
+            - name: turn-udp
+              containerPort: {{ .Values.coturn.port }}
+              protocol: UDP
+            - name: turns-tcp
+              containerPort: {{ .Values.coturn.tlsPort }}
+              protocol: TCP
+          env:
+            - name: TURN_REALM
+              value: {{ .Values.coturn.realm | quote }}
+            - name: TURN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "matrix-stack.secretName" . }}
+                  key: turn-password
+            - name: TURN_USER
+              value: "{{ .Values.coturn.username }}:$(TURN_PASSWORD)"
+          resources:
+            {{- toYaml .Values.coturn.resources | nindent 12 }}
+{{- end }}

@@ -1,0 +1,176 @@
+http:
+  routers:
+    local-synapse-admin:
+      rule: "Host(`127.0.0.1`) && PathPrefix(`/_synapse/admin`)"
+      entryPoints:
+        - localadmin
+      service: matrix
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+
+    local-matrix:
+      rule: "Host(`127.0.0.1`) && (PathPrefix(`/_matrix`) || PathPrefix(`/_synapse`) || PathPrefix(`/.well-known/matrix`))"
+      entryPoints:
+        - local
+      service: matrix
+      middlewares:
+        - security-headers
+        - public-rate-limit
+      priority: 300
+
+    local-element:
+      rule: "Host(`127.0.0.1`)"
+      entryPoints:
+        - local
+      service: element
+      middlewares:
+        - security-headers
+        - public-rate-limit
+      priority: 100
+
+    local-ketesa-matrix:
+      rule: "Host(`127.0.0.1`) && (PathPrefix(`/_matrix`) || PathPrefix(`/_synapse/admin`) || PathPrefix(`/.well-known/matrix`))"
+      entryPoints:
+        - localadmin
+      service: matrix
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      priority: 300
+
+    local-ketesa:
+      rule: "Host(`127.0.0.1`)"
+      entryPoints:
+        - localadmin
+      service: ketesa
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      priority: 100
+
+    synapse-admin:
+      rule: "Host(`matrix.activi.io`) && PathPrefix(`/_synapse/admin`)"
+      entryPoints:
+        - websecure
+      service: matrix
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      tls: {}
+
+    matrix:
+      rule: "Host(`matrix.activi.io`)"
+      entryPoints:
+        - websecure
+      service: matrix
+      middlewares:
+        - security-headers
+        - public-rate-limit
+      tls: {}
+
+    element:
+      rule: "Host(`space.activi.io`)"
+      entryPoints:
+        - websecure
+      service: element
+      middlewares:
+        - security-headers
+        - public-rate-limit
+      tls: {}
+
+    traefik:
+      rule: "Host(`traefik.activi.io`)"
+      entryPoints:
+        - websecure
+      service: api@internal
+      middlewares:
+        - traefik-dashboard-auth
+        - security-headers
+        - admin-rate-limit
+      tls: {}
+
+    element-admin:
+      rule: "Host(`admin.matrix.activi.io`)"
+      entryPoints:
+        - websecure
+      service: element-admin
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      tls: {}
+
+    ketesa-matrix:
+      rule: "Host(`synapse-admin.activi.io`) && (PathPrefix(`/_matrix`) || PathPrefix(`/_synapse/admin`) || PathPrefix(`/.well-known/matrix`))"
+      entryPoints:
+        - websecure
+      service: matrix
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      priority: 300
+      tls: {}
+
+    ketesa:
+      rule: "Host(`synapse-admin.activi.io`)"
+      entryPoints:
+        - websecure
+      service: ketesa
+      middlewares:
+        - security-headers
+        - admin-rate-limit
+      priority: 100
+      tls: {}
+
+  services:
+    matrix:
+      loadBalancer:
+        servers:
+          - url: "http://synapse:8008"
+
+    element:
+      loadBalancer:
+        servers:
+          - url: "http://element:80"
+
+    element-admin:
+      loadBalancer:
+        servers:
+          - url: "http://element-admin:8080"
+
+    ketesa:
+      loadBalancer:
+        servers:
+          - url: "http://ketesa:8080"
+
+  middlewares:
+    synapse-admin-auth:
+      basicAuth:
+        users:
+          - "admin:REDACTED_BCRYPT_HASH"
+
+    traefik-dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:REDACTED_BCRYPT_HASH"
+
+    security-headers:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        permissionsPolicy: "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+
+    public-rate-limit:
+      rateLimit:
+        average: 100
+        burst: 200
+
+    admin-rate-limit:
+      rateLimit:
+        average: 20
+        burst: 40

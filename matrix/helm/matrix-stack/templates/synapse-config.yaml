@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "matrix-stack.fullname" . }}-synapse-config
+  labels:
+    {{- include "matrix-stack.labels" . | nindent 4 }}
+data:
+  homeserver.log.config: |
+    version: 1
+    formatters:
+      precise:
+        format: "%(asctime)s - %(name)s - %(lineno)d - %(levelname)s - %(request)s - %(message)s"
+    filters:
+      context:
+        (): synapse.util.logcontext.LoggingContextFilter
+        request: ""
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: precise
+        filters: [context]
+    loggers:
+      synapse.storage.SQL:
+        level: INFO
+    root:
+      level: INFO
+      handlers: [console]
+    disable_existing_loggers: false
+  homeserver.yaml: |
+    server_name: {{ .Values.domains.matrix | quote }}
+    public_baseurl: {{ .Values.urls.matrixBase | quote }}
+    report_stats: {{ .Values.synapse.reportStats }}
+    serve_server_wellknown: true
+    pid_file: /data/homeserver.pid
+    web_client_location: {{ .Values.urls.elementBase | quote }}
+
+    database:
+      name: psycopg2
+      args:
+        user: {{ .Values.postgres.username | quote }}
+        password: "__DB_PASSWORD__"
+        database: {{ .Values.postgres.database | quote }}
+        host: {{ include "matrix-stack.fullname" . }}-postgres
+        port: {{ .Values.postgres.port }}
+        cp_min: 5
+        cp_max: 10
+
+    listeners:
+      - port: 8008
+        tls: false
+        type: http
+        x_forwarded: true
+        bind_addresses: ['0.0.0.0']
+        resources:
+          - names: [{{ .Values.synapse.listenerResources }}]
+
+    experimental_features:
+      msc4186_enabled: {{ .Values.synapse.msc4186Enabled }}
+
+    max_upload_size: {{ .Values.synapse.maxUploadSize }}
+    media_store_path: /data/media_store
+    media_retention:
+      local_media_lifetime: {{ .Values.synapse.mediaRetention.local }}
+      remote_media_lifetime: {{ .Values.synapse.mediaRetention.remote }}
+    enable_registration: {{ .Values.synapse.enableRegistration }}
+    registration_shared_secret: "__REGISTRATION_SHARED_SECRET__"
+
+    {{- if .Values.coturn.enabled }}
+    turn_uris:
+      - "turn:{{ .Values.coturn.host }}:{{ .Values.coturn.port }}?transport=udp"
+      - "turn:{{ .Values.coturn.host }}:{{ .Values.coturn.port }}?transport=tcp"
+    turn_user_lifetime: 1h
+    turn_allow_guests: false
+    turn_username: {{ .Values.coturn.username | quote }}
+    turn_password: "__TURN_PASSWORD__"
+    {{- end }}
+
+    {{- if .Values.smtp.enabled }}
+    email:
+      smtp_host: {{ .Values.smtp.host | quote }}
+      smtp_port: {{ .Values.smtp.port }}
+      require_transport_security: {{ .Values.smtp.requireTls }}
+      smtp_user: "__SMTP_USER__"
+      smtp_pass: "__SMTP_PASSWORD__"
+      notif_from: "{{ .Values.smtp.fromName }} <{{ .Values.smtp.fromEmail }}>"
+      app_name: {{ .Values.app.brand | quote }}
+      enable_notifs: {{ .Values.smtp.enableNotifs }}
+      notif_for_new_users: {{ .Values.smtp.notifForNewUsers }}
+      client_base_url: {{ .Values.urls.elementBase | quote }}
+    {{- end }}
+
+    log_config: /data/homeserver.log.config
+    signing_key_path: /data/homeserver.signing.key
+
+    trusted_key_servers:
+      - server_name: {{ .Values.synapse.trustedKeyServer | quote }}
