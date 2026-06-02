@@ -20,7 +20,7 @@ for arg in "${@:3}"; do
 done
 
 TEAM_DIR="profiles/teams/$TEAM_NAME"
-AGENT_DIR="$TEAM_DIR/agents/$AGENT_NAME"
+AGENT_DIR="$TEAM_DIR/$AGENT_NAME"
 
 if [ ! -d "$TEAM_DIR" ]; then
     echo "❌ Team '$TEAM_NAME' existiert nicht! Erst ./scripts/new_team.sh $TEAM_NAME"

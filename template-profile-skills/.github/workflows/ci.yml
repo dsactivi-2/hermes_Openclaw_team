@@ -16,7 +16,7 @@ jobs:
 
       - name: Check SOUL.md per Agent
         run: |
-          for d in profiles/teams/*/agents/*/; do
+          for d in profiles/teams/*/*/; do
             if [ -f "$d/SOUL.md" ]; then
               echo "OK: $d/SOUL.md"
             else

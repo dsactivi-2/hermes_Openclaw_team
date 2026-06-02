@@ -25,7 +25,6 @@ if [ -d "$TEAM_DIR" ]; then
     exit 1
 fi
 
-mkdir -p "$TEAM_DIR/agents"
 mkdir -p "$TEAM_DIR/skills"
 
 cat > "$TEAM_DIR/team.yaml" << EOF
