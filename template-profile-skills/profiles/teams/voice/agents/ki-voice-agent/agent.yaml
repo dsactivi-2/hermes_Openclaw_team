@@ -7,3 +7,22 @@ created: 2026-06-02T19:00:00Z
 channels:
   - telegram
   - cli
+
+skills:
+  - pipecat-voice-agent
+  - xai-realtime-voice
+  - voice-agent-orchestrator
+  - voice-agent-memory
+  - hindsight-docs
+  - mac-remote-access
+  - native-mcp
+  - llama-cpp
+
+toolsets:
+  - terminal
+  - file
+  - web
+  - browser
+  - tts
+  - vision
+  - delegation

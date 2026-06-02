@@ -1,6 +1,6 @@
-agent_name: n8n-workflow
-team: devops
-runtime: hermes
+agent_name: sales-qualifier
+team: revops-core
+runtime: both
 model: deepseek-v4-flash:cloud
 policy_level: 2
 created: 2026-06-02T19:00:00Z
@@ -9,16 +9,14 @@ channels:
   - cli
 
 skills:
+  - dograh
   - n8n-voice-workflows
   - webhook-subscriptions
-  - native-mcp
-  - airtable
-  - google-workspace
-  - watchers
+  - telegram-file-delivery
+  - humanizer
 
 toolsets:
   - terminal
   - web
-  - browser
   - file
   - cronjob

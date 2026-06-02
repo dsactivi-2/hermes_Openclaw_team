@@ -7,3 +7,22 @@ created: 2026-06-02T19:00:00Z
 channels:
   - telegram
   - cli
+
+skills:
+  - llama-cpp
+  - huggingface-hub
+  - modal-gguf-deployment
+  - serving-llms-vllm
+  - weights-and-biases
+  - langfuse
+  - dspy
+  - evaluating-llms-harness
+  - hindsight-docs
+
+toolsets:
+  - terminal
+  - file
+  - web
+  - memory
+  - browser
+  - delegation

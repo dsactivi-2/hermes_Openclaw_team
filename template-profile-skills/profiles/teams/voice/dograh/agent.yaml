@@ -1,5 +1,5 @@
-agent_name: n8n-workflow
-team: devops
+agent_name: dograh
+team: voice
 runtime: hermes
 model: deepseek-v4-flash:cloud
 policy_level: 2
@@ -9,16 +9,16 @@ channels:
   - cli
 
 skills:
-  - n8n-voice-workflows
+  - dograh
+  - dograh-setup
   - webhook-subscriptions
-  - native-mcp
-  - airtable
-  - google-workspace
-  - watchers
+  - n8n-voice-workflows
+  - telegram-file-delivery
+  - systematic-debugging
 
 toolsets:
   - terminal
   - web
-  - browser
   - file
+  - browser
   - cronjob

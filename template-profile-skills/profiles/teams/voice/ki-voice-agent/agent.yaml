@@ -1,7 +1,7 @@
-agent_name: xai-voice-dograh
+agent_name: ki-voice-agent
 team: voice
 runtime: hermes
-model: grok-realtime
+model: ministral-3:3b-cloud
 policy_level: 2
 created: 2026-06-02T19:00:00Z
 channels:
@@ -9,18 +9,20 @@ channels:
   - cli
 
 skills:
-  - xai-realtime-voice
-  - dograh
   - pipecat-voice-agent
-  - native-mcp
+  - xai-realtime-voice
+  - voice-agent-orchestrator
   - voice-agent-memory
+  - hindsight-docs
+  - mac-remote-access
+  - native-mcp
+  - llama-cpp
 
 toolsets:
   - terminal
-  - web
   - file
+  - web
   - browser
   - tts
-
-required_env:
-  - XAI_API_KEY
+  - vision
+  - delegation

@@ -7,3 +7,16 @@ created: 2026-06-02T19:00:00Z
 channels:
   - telegram
   - cli
+
+skills:
+  - dograh
+  - n8n-voice-workflows
+  - webhook-subscriptions
+  - telegram-file-delivery
+  - humanizer
+
+toolsets:
+  - terminal
+  - web
+  - file
+  - cronjob

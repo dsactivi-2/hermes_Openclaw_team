@@ -1,26 +1,28 @@
-agent_name: prompting-salesteleagent
-team: sales
+agent_name: mlops
+team: mlops
 runtime: hermes
 model: deepseek-v4-pro:cloud
-policy_level: 2
+policy_level: 3
 created: 2026-06-02T19:00:00Z
 channels:
   - telegram
   - cli
 
 skills:
-  - dograh
-  - n8n-voice-workflows
-  - humanizer
+  - llama-cpp
+  - huggingface-hub
+  - modal-gguf-deployment
+  - serving-llms-vllm
+  - weights-and-biases
   - langfuse
+  - dspy
   - evaluating-llms-harness
-  - youtube-content
-  - llm-wiki
-  - project-knowledge-base
+  - hindsight-docs
 
 toolsets:
   - terminal
   - file
   - web
-  - browser
   - memory
+  - browser
+  - delegation
