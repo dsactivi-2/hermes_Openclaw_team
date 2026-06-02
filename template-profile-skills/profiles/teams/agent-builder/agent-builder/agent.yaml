@@ -20,6 +20,9 @@ skills:
   - requesting-code-review
   - github-pr-workflow
   - github-code-review
+  - github-issues
+  - github-repo-management
+  - project-knowledge-base
   - codebase-inspection
 
 toolsets:

@@ -17,6 +17,7 @@ skills:
   - watchers
   - webhook-subscriptions
   - mac-remote-access
+  - systematic-debugging
 
 toolsets:
   - terminal
