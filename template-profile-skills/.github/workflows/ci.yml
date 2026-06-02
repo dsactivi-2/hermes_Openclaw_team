@@ -1,0 +1,47 @@
+name: Preflight Check
+on: [push, pull_request]
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate YAML Syntax
+        run: |
+          for f in $(find . -name "*.yaml" -o -name "*.yml"); do
+            python3 -c "import yaml; yaml.safe_load(open('$f'))" || exit 1
+            echo "OK: $f"
+          done
+
+      - name: Check SOUL.md per Agent
+        run: |
+          for d in profiles/teams/*/agents/*/; do
+            if [ -f "$d/SOUL.md" ]; then
+              echo "OK: $d/SOUL.md"
+            else
+              echo "MISSING: $d/SOUL.md"
+              exit 1
+            fi
+          done
+
+      - name: Validate team.yaml Structure
+        run: |
+          for f in profiles/teams/*/team.yaml; do
+            python3 -c "
+import yaml,sys
+t=yaml.safe_load(open('$f'))
+assert 'team_name' in t, 'missing name'
+assert 'runtime' in t and t['runtime'] in ('hermes','openclaw','both'), 'bad runtime'
+assert 'policy_level' in t, 'missing policy'
+print('OK: $f')
+"
+          done
+
+      - name: Shellcheck
+        run: |
+          if command -v shellcheck &>/dev/null; then
+            shellcheck scripts/*.sh
+          else
+            echo "shellcheck not installed — skipping"
+          fi

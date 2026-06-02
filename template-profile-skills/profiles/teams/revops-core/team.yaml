@@ -1,0 +1,9 @@
+team_name: revops-core
+runtime: both
+policy_level: 2
+created: 2026-06-02T18:00:00Z
+agents:
+  - sales-qualifier
+channels:
+  - telegram
+  - cli
