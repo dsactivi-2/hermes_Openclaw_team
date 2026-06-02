@@ -1,0 +1,9 @@
+agent_name: dev-op
+team: devops
+runtime: hermes
+model: deepseek-v4-flash:cloud
+policy_level: 3
+created: 2026-06-02T19:00:00Z
+channels:
+  - telegram
+  - cli

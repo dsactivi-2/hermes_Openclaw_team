@@ -40,20 +40,39 @@ Der Orchestrator entscheidet pro Task:
 4. **Welcher Approval-Gate?** — Read-only, Low-Risk, High-Risk, Critical
 5. **Welcher Channel?** — Telegram/CLI/Slack/API
 
-## Laufende Profile
+## Vollständige Hierarchie
 
-| Profil | Runtime | Team | Modell |
-|--------|---------|------|--------|
-| dev-op | Hermes | DevOps | deepseek-v4-flash:cloud |
-| agent-builder | Hermes | DevOps | deepseek-v4-pro:cloud |
-| n8n-workflow | Hermes | DevOps | deepseek-v4-flash:cloud |
-| dograh | Hermes | Voice | deepseek-v4-flash:cloud |
-| ki-voice-agent | Hermes | Voice | ministral-3:3b-cloud |
-| prompting-salesteleagent | Hermes | Sales | deepseek-v4-pro:cloud |
-| xai-voice-dograh | Hermes | Voice | grok-realtime |
-| research | Hermes | Research | deepseek-v4-pro:cloud |
-| mlops | Hermes | ML | deepseek-v4-pro:cloud |
-| creative | Hermes | Creative | deepseek-v4-flash:cloud |
+```
+ORCHESTRATOR (Policy 0)
+│
+├── TEAM: devops (Policy 3, high-risk, Hermes)
+│   ├── dev-op           → Server-DevOp (deepseek-v4-flash:cloud)
+│   └── n8n-workflow     → API-Integration (deepseek-v4-flash:cloud)
+│
+├── TEAM: agent-builder (Policy 3, high-risk, Hermes)
+│   └── agent-builder    → Skill-Architekt (deepseek-v4-pro:cloud)
+│
+├── TEAM: sales (Policy 2, low-risk, Hermes)
+│   ├── prompting-salesteleagent  → Prompt-Engineer (deepseek-v4-pro:cloud)
+│   └── sales-qualifier           → Sales-Qualifier (deepseek-v4-flash:cloud)
+│
+├── TEAM: voice (Policy 2, low-risk, Hermes)
+│   ├── dograh           → Dashboard-Manager (deepseek-v4-flash:cloud)
+│   ├── ki-voice-agent   → Pipecat-Architekt (ministral-3:3b-cloud)
+│   └── xai-voice-dograh → xAI/Grok-Spezialist (grok-realtime)
+│
+├── TEAM: research (Policy 1, read-only, Hermes)
+│   └── research         → Paper-Scanner (deepseek-v4-pro:cloud)
+│
+├── TEAM: mlops (Policy 3, high-risk, Hermes)
+│   └── mlops            → Model-Engineer (deepseek-v4-pro:cloud)
+│
+├── TEAM: creative (Policy 1, read-only, Hermes)
+│   └── creative         → Designer (deepseek-v4-flash:cloud)
+│
+└── TEAM: revops-core (Policy 2, low-risk, both Hermes+OpenClaw)
+    └── sales-qualifier  → Lead-Qualifizierung (deepseek-v4-flash:cloud)
+```
 
 ## Netzwerk
 

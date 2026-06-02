@@ -1,0 +1,9 @@
+team_name: research
+runtime: hermes
+policy_level: 1
+created: 2026-06-02T18:00:00Z
+agents:
+  - research
+channels:
+  - telegram
+  - cli

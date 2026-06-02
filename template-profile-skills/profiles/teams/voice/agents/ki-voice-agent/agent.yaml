@@ -1,0 +1,9 @@
+agent_name: ki-voice-agent
+team: voice
+runtime: hermes
+model: ministral-3:3b-cloud
+policy_level: 2
+created: 2026-06-02T19:00:00Z
+channels:
+  - telegram
+  - cli

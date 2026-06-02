@@ -1,0 +1,9 @@
+agent_name: xai-voice-dograh
+team: voice
+runtime: hermes
+model: grok-realtime
+policy_level: 2
+created: 2026-06-02T19:00:00Z
+channels:
+  - telegram
+  - cli

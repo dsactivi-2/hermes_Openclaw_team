@@ -1,0 +1,10 @@
+team_name: devops
+runtime: hermes
+policy_level: 3
+created: 2026-06-02T18:00:00Z
+agents:
+  - dev-op
+  - n8n-workflow
+channels:
+  - telegram
+  - cli

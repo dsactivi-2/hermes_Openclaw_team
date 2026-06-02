@@ -1,0 +1,9 @@
+agent_name: dograh
+team: voice
+runtime: hermes
+model: deepseek-v4-flash:cloud
+policy_level: 2
+created: 2026-06-02T19:00:00Z
+channels:
+  - telegram
+  - cli
