@@ -44,6 +44,7 @@ Der Orchestrator entscheidet pro Task:
 
 ```
 ORCHESTRATOR (Policy 0)
+│   ├── orchestrator    → Task-Router (deepseek-v4-pro:cloud)
 │
 ├── TEAM: devops (Policy 3, high-risk, Hermes)
 │   ├── dev-op           → Server-DevOp (deepseek-v4-flash:cloud)

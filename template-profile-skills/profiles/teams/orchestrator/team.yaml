@@ -1,0 +1,9 @@
+team_name: orchestrator
+runtime: hermes
+policy_level: 0
+created: 2026-06-02T20:00:00Z
+agents:
+  - orchestrator
+channels:
+  - telegram
+  - cli

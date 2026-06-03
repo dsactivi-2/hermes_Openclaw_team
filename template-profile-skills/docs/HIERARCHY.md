@@ -4,6 +4,7 @@
 
 ```
 ORCHESTRATOR (Policy 0 — unrestricted)
+│   orchestrator → Task-Router (deepseek-v4-pro:cloud)
 │
 ├── TEAM: devops (Policy 3 — high-risk, Hermes)
 │   ├── dev-op           → Server-DevOp (deepseek-v4-flash:cloud)

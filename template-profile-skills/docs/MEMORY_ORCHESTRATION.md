@@ -157,33 +157,38 @@ WAS NICHT FUNKTIONIERT:
 ## 6. WIE WEISS DER ORCHESTRATOR WANN WER AKTIVIERT WERDEN MUSS?
 
 ```
-ES GIBT KEINEN SEPARATEN ORCHESTRATOR-AGENTEN.
-Der Orchestrator BIST DU (Denis) — unterstützt durch:
+ES GIBT JETZT EINEN ORCHESTRATOR-AGENTEN (Policy 0).
+Du kannst ihn nutzen — oder weiter manuell routen.
 
 AKTUELL (Stand heute):
 ────────────────────────────────────────
-1. DU rufst das passende Profil auf:
+OPTION A) Du rufst Profile direkt auf:
+   "orchestrator chat -q 'Server-Health'"
+   → Orchestrator analysiert: "Server-Health" → dev-op
+   → Führt aus: hermes -p dev-op chat -q "Server-Health check"
+   → Gibt Ergebnis zurück
+
+OPTION B) Du rufst Profile manuell auf:
    "dev-op chat -q 'Server-Health'"
-   "agent-builder chat -q 'Baue Skill'"
-   "dograh chat -q 'Starte Campaign'"
+   → Direkt, kein Umweg
 
-2. DU weisst welches Profil wofür da ist:
-   → siehe HIERARCHY.md oder HIERARCHY_PROCESSES.md
+WIE DER ORCHESTRATOR ARBEITET:
+────────────────────────────────────────
+1. Nimmt DEINE Anfrage entgegen (Telegram/CLI)
+2. Analysiert den Intent (was willst du?)
+3. Schlägt in Routing-Tabelle nach (welches Profil?)
+4. Delegiert via: hermes -p <profil> chat -q "..."
+5. Sammelt Ergebnis und präsentiert es dir
+6. Bei Unsicherheit: clarify-Tool → du entscheidest
 
-3. Jedes Profil weiss aus seiner SOUL.md:
-   - Was es darf (Policy-Level)
-   - Was es NICHT darf (Verboten)
-   - Wen es fragen muss bei Unsicherheit
-
-OPTIMIERUNG (ZUKUNFT): Automatischer Orchestrator
-────────────────────────────────────────────────
-1. Ein "orchestrator"-Profil empfängt ALLE Anfragen
-2. Analysiert: Was will der User?
-3. Routet an das richtige Profil via: hermes -p <profil> chat -q "..."
-4. Ergebnis zurück an User
-
-Das ist aktuell NICHT implementiert.
-Du bist der Orchestrator.
+ORCHESTRATOR-PROFIL:
+────────────────────────────────────────
+  Profil:     orchestrator
+  Modell:     deepseek-v4-pro:cloud
+  Policy:     0 (unrestricted)
+  Gateway:    Telegram (kann alle Anfragen empfangen)
+  Wrapper:    orchestrator chat
+  Repo:       profiles/teams/orchestrator/orchestrator/
 ```
 
 ## 7. PRAXIS-BEISPIEL: KOMPLETT-DURCHLAUF
@@ -207,15 +212,28 @@ OHNE ORCHESTRATOR-PROFIL: DU musst wissen welches Profil wofür.
 MIT ORCHESTRATOR-PROFIL: Ein Profil routet automatisch.
 ```
 
-## 8. EMPFEHLUNG: Soll ich ein Orchestrator-Profil bauen?
+## 8. FERTIG: Orchestrator-Profil ist gebaut!
 
 ```
-Wenn JA: Ich erstelle ein "orchestrator"-Profil (Policy 0) das:
-  • Deine Telegram-Nachrichten analysiert
-  • Automatisch das richtige Profil anspricht
-  • Ergebnis sammelt und Dir präsentiert
-  • Bei Unsicherheit: Dich fragt
+✅ Profil:         orchestrator (Policy 0 — unrestricted)
+✅ Modell:         deepseek-v4-pro:cloud
+✅ Wrapper:        orchestrator chat
+✅ SOUL.md:        Routing-Tabelle + Core-Regeln
+✅ agent.yaml:     Skills + Toolsets
+✅ system-prompt:  Anweisungen + Verbotsliste
+✅ Gateway:        Telegram
+✅ Im Repo:        profiles/teams/orchestrator/
 
-Wenn NEIN: Du rufst weiter manuell die Profile auf — das ist flexibler
-aber weniger automatisiert.
+JETZT NUTZEN:
+────────────────────────────
+  orchestrator chat -q "Prüf die Server"
+
+ODER DIREKT:
+────────────────────────────
+  dev-op chat -q "Server-Health"
+  agent-builder chat -q "Baue Skill"
+  dograh chat -q "Starte Campaign"
+
+WICHTIG: Der Orchestrator NIMMT NUR AN und routet.
+Er führt NICHTS SELBST aus.
 ```
